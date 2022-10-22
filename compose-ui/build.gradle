@@ -55,7 +55,7 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                groupId project.group
+                groupId "com.github.naingaungluu.form-conductor"
                 artifactId project.name
                 version project.version
             }

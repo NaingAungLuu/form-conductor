@@ -1,0 +1,131 @@
+package me.naingaungluu.formvalidation.screens
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import me.naingaungluu.formconductor.annotations.EmailAddress
+import me.naingaungluu.formconductor.annotations.IntegerRange
+import me.naingaungluu.formconductor.annotations.IsChecked
+import me.naingaungluu.formconductor.annotations.MinLength
+import me.naingaungluu.formconductor.composeui.field
+import me.naingaungluu.formconductor.composeui.form
+
+data class SignUpFormData(
+    @MinLength(2)
+    var name: String = "",
+
+    @IntegerRange(min = 0, max = 99)
+    var age: Int = 0,
+
+    @EmailAddress
+    var emailAddress: String = "",
+
+    var gender: Gender = Gender.Male,
+
+    @IsChecked
+    var isMarried: Boolean = false
+)
+
+sealed class Gender(val value: String) {
+    object Male : Gender("MALE")
+    object Female : Gender("FEMALE")
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun FormScreen() {
+    // API Spec
+    Column {
+        form(SignUpFormData::class) {
+            field(SignUpFormData::name) {
+                TextField(
+                    value = state.value?.value.orEmpty(),
+                    onValueChange = { setField(it.ifEmpty { null }) },
+                    modifier = Modifier.padding(horizontal = 20.dp).padding(top = 20.dp),
+                    label = { Text("Name") },
+                    isError = resultState.value is me.naingaungluu.formconductor.FieldResult.Error
+                )
+                AnimatedVisibility(
+                    resultState.value is me.naingaungluu.formconductor.FieldResult.Error
+                ) {
+                    val result = resultState.value
+                    if (result is me.naingaungluu.formconductor.FieldResult.Error) {
+                        Text(
+                            text = result.message,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(start = 20.dp)
+                        )
+                    }
+                }
+            }
+            field(SignUpFormData::emailAddress) {
+                TextField(
+                    value = state.value?.value.orEmpty(),
+                    onValueChange = this::setField,
+                    modifier = Modifier.padding(20.dp),
+                    label = { Text("Email Address") }
+                )
+                AnimatedVisibility(
+                    resultState.value is me.naingaungluu.formconductor.FieldResult.Error
+                ) {
+                    val result = resultState.value
+                    if (result is me.naingaungluu.formconductor.FieldResult.Error) {
+                        Text(
+                            text = result.message,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(start = 20.dp)
+                        )
+                    }
+                }
+            }
+            field(SignUpFormData::gender) {
+                Row(Modifier.padding(20.dp).selectableGroup()) {
+                    RadioButton(
+                        selected = state.value?.value == Gender.Male,
+                        onClick = { setField(Gender.Male) },
+                        modifier = Modifier.semantics { contentDescription = "Male" }
+                    )
+                    Text("Male")
+                    RadioButton(
+                        selected = state.value?.value == Gender.Female,
+                        onClick = { setField(Gender.Female) },
+                        modifier = Modifier.semantics { contentDescription = "Male" }
+                    )
+                    Text("Female")
+                }
+            }
+            when (val form = formState.value) {
+                is me.naingaungluu.formconductor.FormResult.Success -> SignUpFormDataLayout(form.data)
+                else -> Text("Invalid Form Input")
+            }
+        }
+    }
+}
+
+@Composable
+fun SignUpFormDataLayout(form: SignUpFormData) {
+    Column(Modifier.padding(20.dp)) {
+        Text("Form Data Result", textDecoration = TextDecoration.Underline, fontWeight = FontWeight.Bold)
+        Text("name : ${form.name}")
+        Text("age : ${form.age}")
+        Text("gender : ${form.gender}")
+        Text("emailAddress : ${form.emailAddress}")
+    }
+}

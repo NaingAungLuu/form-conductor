@@ -4,7 +4,7 @@ import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.EmailAddress
 import me.naingaungluu.formconductor.validation.ValidationRule
 
-internal object EmailAddressValidationRule : ValidationRule<String, EmailAddress> {
+object EmailAddressValidationRule : ValidationRule<String, EmailAddress> {
 
     const val emailPattern = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}\\@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
         "(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"

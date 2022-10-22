@@ -20,7 +20,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 from components.java
 
-                groupId "com.github.naingaungluu.form-conductor"
+                groupId project.group
                 artifactId project.name
                 version project.version
             }

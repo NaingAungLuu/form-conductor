@@ -10,7 +10,7 @@ internal object MaxLengthValidationRule : ValidationRule<String, MaxLength> {
         return if (validationSuccess) {
             FieldResult.Success
         } else {
-            FieldResult.Error("Value shouldn't be longer than ${options.value}.")
+            FieldResult.Error("Value shouldn't be longer than ${options.value}.", this)
         }
     }
 }

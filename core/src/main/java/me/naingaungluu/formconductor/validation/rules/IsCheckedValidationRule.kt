@@ -9,7 +9,7 @@ internal object IsCheckedValidationRule : ValidationRule<Boolean, IsChecked> {
         return if (value) {
             FieldResult.Success
         } else {
-            FieldResult.Error("This field is required to be checked")
+            FieldResult.Error("This field is required to be checked", this)
         }
     }
 }

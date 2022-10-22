@@ -2,6 +2,7 @@ package me.naingaungluu.formconductor
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import me.naingaungluu.formconductor.validation.FieldValidator
+import me.naingaungluu.formconductor.validation.rules.OptionalValidationRule
 import kotlin.reflect.KProperty1
 
 internal class FormFieldImpl<T : Any, V : Any>(
@@ -29,7 +30,7 @@ internal class FormFieldImpl<T : Any, V : Any>(
             resultStream.value = if (isOptional) {
                 FieldResult.Success
             } else {
-                FieldResult.Error("This field is required")
+                FieldResult.Error("This field is required", OptionalValidationRule)
             }
         }
     }

@@ -15,7 +15,7 @@ internal object EmailAddressValidationRule : ValidationRule<String, EmailAddress
         } else if (value.isEmpty()) {
             FieldResult.NoInput
         } else {
-            FieldResult.Error("Invalid Format")
+            FieldResult.Error("Invalid Format", this)
         }
     }
 }

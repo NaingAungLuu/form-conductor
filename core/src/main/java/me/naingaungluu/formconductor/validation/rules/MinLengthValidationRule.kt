@@ -10,7 +10,7 @@ internal object MinLengthValidationRule : ValidationRule<String, MinLength> {
         return if (validationSuccess) {
             FieldResult.Success
         } else {
-            FieldResult.Error("Value shouldn't be shorter than ${options.value}.")
+            FieldResult.Error("Value shouldn't be shorter than ${options.value}.", this)
         }
     }
 }

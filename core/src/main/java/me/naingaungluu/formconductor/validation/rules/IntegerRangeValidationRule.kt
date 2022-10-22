@@ -10,7 +10,7 @@ internal object IntegerRangeValidationRule : ValidationRule<Int, IntegerRange> {
         return if (validationSuccess) {
             FieldResult.Success
         } else {
-            FieldResult.Error("Value out of range")
+            FieldResult.Error("Value out of range", this)
         }
     }
 }

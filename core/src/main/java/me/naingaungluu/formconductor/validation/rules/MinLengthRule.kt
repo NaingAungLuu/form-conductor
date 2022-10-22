@@ -4,7 +4,7 @@ import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.MinLength
 import me.naingaungluu.formconductor.validation.ValidationRule
 
-object MinLengthValidationRule : ValidationRule<String, MinLength> {
+object MinLengthRule : ValidationRule<String, MinLength> {
     override fun validate(value: String, options: MinLength): FieldResult {
         val validationSuccess = value.count() >= options.value
         return if (validationSuccess) {

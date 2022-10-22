@@ -1,8 +1,8 @@
 package me.naingaungluu.formconductor.annotations
 
-import me.naingaungluu.formconductor.validation.rules.OptionalValidationRule
+import me.naingaungluu.formconductor.validation.rules.OptionalRule
 
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
-@FieldValidation<Any?>(OptionalValidationRule::class)
+@FieldValidation<Any?>(OptionalRule::class)
 annotation class Optional

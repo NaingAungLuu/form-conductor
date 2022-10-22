@@ -4,7 +4,7 @@ import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.IsChecked
 import me.naingaungluu.formconductor.validation.ValidationRule
 
-object IsCheckedValidationRule : ValidationRule<Boolean, IsChecked> {
+object IsCheckedRule : ValidationRule<Boolean, IsChecked> {
     override fun validate(value: Boolean, options: IsChecked): FieldResult {
         return if (value) {
             FieldResult.Success

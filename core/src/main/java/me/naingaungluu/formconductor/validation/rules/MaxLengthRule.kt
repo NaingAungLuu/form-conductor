@@ -4,7 +4,7 @@ import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.MaxLength
 import me.naingaungluu.formconductor.validation.ValidationRule
 
-object MaxLengthValidationRule : ValidationRule<String, MaxLength> {
+object MaxLengthRule : ValidationRule<String, MaxLength> {
     override fun validate(value: String, options: MaxLength): FieldResult {
         val validationSuccess = value.count() <= options.value
         return if (validationSuccess) {

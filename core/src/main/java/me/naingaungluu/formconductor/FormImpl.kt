@@ -2,7 +2,6 @@ package me.naingaungluu.formconductor
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import me.naingaungluu.formconductor.annotations.FieldValidation
 import me.naingaungluu.formconductor.validation.FieldValidator
@@ -29,19 +28,20 @@ class FormImpl<T : Any>(
 
         formDataStream = combine(fieldMap.values.map { it.valueStream.asSharedFlow() }) { _ ->
 
-            val formSuccess = fieldMap.values
-                .map { it.resultStream.value }
-                .all { it is FieldResult.Success || it is FieldResult.NoInput }
+            val resultStreams = fieldMap.values.map { it.resultStream.value }
+            val formSuccess = resultStreams.all {
+                it is FieldResult.Success || it is FieldResult.NoInput
+            }
 
             if (formSuccess) {
                 val formData = constructFormData()
                 FormResult.Success(formData)
             } else {
-                FormResult.Error
-            }
-        }.catch {
-            when (it) {
-                is java.lang.IllegalStateException -> emit(FormResult.Error)
+                val failedRules = resultStreams
+                    .filterIsInstance<FieldResult.Error>()
+                    .map { it.failedRule }
+
+                FormResult.Error(failedRules.toSet())
             }
         }
     }
@@ -81,7 +81,7 @@ class FormImpl<T : Any>(
             it.parameters.all(KParameter::isOptional)
         }
 
-        checkNotNull(constructor)
+        checkNotNull(constructor) { "A constructor with optional values is required." }
 
         val parameters = constructor.parameters
         val argumentMap = parameters

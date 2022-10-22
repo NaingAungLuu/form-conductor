@@ -21,9 +21,13 @@ import androidx.compose.ui.unit.dp
 import me.naingaungluu.formconductor.annotations.EmailAddress
 import me.naingaungluu.formconductor.annotations.IntegerRange
 import me.naingaungluu.formconductor.annotations.IsChecked
+import me.naingaungluu.formconductor.annotations.MaxLength
 import me.naingaungluu.formconductor.annotations.MinLength
 import me.naingaungluu.formconductor.composeui.field
 import me.naingaungluu.formconductor.composeui.form
+import me.naingaungluu.formconductor.validation.rules.EmailAddressRule
+import me.naingaungluu.formconductor.validation.rules.MaxLengthRule
+import me.naingaungluu.formconductor.validation.rules.MinLengthRule
 
 data class SignUpFormData(
     @MinLength(2)
@@ -32,6 +36,8 @@ data class SignUpFormData(
     @IntegerRange(min = 0, max = 99)
     var age: Int = 0,
 
+    @MinLength(2)
+    @MaxLength(10)
     @EmailAddress
     var emailAddress: String = "",
 
@@ -45,7 +51,6 @@ sealed class Gender(val value: String) {
     object Male : Gender("MALE")
     object Female : Gender("FEMALE")
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -87,8 +92,14 @@ fun FormScreen() {
                 ) {
                     val result = resultState.value
                     if (result is me.naingaungluu.formconductor.FieldResult.Error) {
+                        val text = when (result.failedRule) {
+                            EmailAddressRule -> "Please enter a valid email address"
+                            MinLengthRule -> "Must be a minimum of 2 words"
+                            MaxLengthRule -> "Must be 10 words maximum"
+                            else -> "Invalid input"
+                        }
                         Text(
-                            text = result.message,
+                            text = text,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.padding(start = 20.dp)
                         )

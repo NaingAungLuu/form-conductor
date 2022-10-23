@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-//    implementation 'com.github.NaingAungLuu:form-conductor:0.0.1'
+//    implementation 'com.github.NaingAungLuu:form-conductor:0.0.2'
     implementation(project(":core"))
     implementation(project(":compose-ui"))
 

@@ -14,6 +14,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Form Validation"
-include ':sample'
+include ':sample-compose'
 include ':core'
 include ':compose-ui'
+include ':sample'

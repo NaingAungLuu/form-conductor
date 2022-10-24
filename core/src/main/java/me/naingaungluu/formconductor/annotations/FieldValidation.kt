@@ -15,6 +15,7 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.ANNOTATION_CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-annotation class FieldValidation<T : Any?>(
+annotation class FieldValidation<T : Any>(
+    val fieldType: KClass<T>,
     val validator: KClass<out ValidationRule<T, *>>
 )

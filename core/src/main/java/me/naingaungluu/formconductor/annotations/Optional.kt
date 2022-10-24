@@ -16,5 +16,4 @@ import me.naingaungluu.formconductor.validation.rules.OptionalRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<Any?>(OptionalRule::class)
 annotation class Optional

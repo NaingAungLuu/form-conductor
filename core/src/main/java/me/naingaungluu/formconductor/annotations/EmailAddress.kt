@@ -13,5 +13,8 @@ import me.naingaungluu.formconductor.validation.rules.EmailAddressRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<String>(EmailAddressRule::class)
+@FieldValidation<String>(
+    fieldType = String::class,
+    validator = EmailAddressRule::class
+)
 annotation class EmailAddress()

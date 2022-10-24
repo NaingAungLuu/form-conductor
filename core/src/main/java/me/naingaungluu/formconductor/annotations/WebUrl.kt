@@ -19,7 +19,10 @@ import me.naingaungluu.formconductor.validation.rules.WebUrlRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<String>(WebUrlRule::class)
+@FieldValidation<String>(
+    fieldType = String::class,
+    validator = WebUrlRule::class
+)
 annotation class WebUrl(
     val httpRequired: Boolean = false
 )

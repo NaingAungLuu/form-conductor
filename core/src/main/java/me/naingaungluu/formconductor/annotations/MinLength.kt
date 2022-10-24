@@ -18,5 +18,8 @@ import me.naingaungluu.formconductor.validation.rules.MinLengthRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<String>(MinLengthRule::class)
+@FieldValidation<String>(
+    fieldType = String::class,
+    validator = MinLengthRule::class
+)
 annotation class MinLength(val value: Int)

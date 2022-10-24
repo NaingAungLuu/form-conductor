@@ -2,6 +2,7 @@ package me.naingaungluu.formconductor.composeui.scope
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import me.naingaungluu.formconductor.FormField
 import me.naingaungluu.formconductor.FormResult
 import kotlin.reflect.KProperty1
 
@@ -19,7 +20,7 @@ interface FormScope<T : Any> {
      * @param fieldClass kotlin property reference of the field
      * @return
      */
-    fun <V : Any> registerField(fieldClass: KProperty1<T, V>): me.naingaungluu.formconductor.FormField<V>
+    fun <V : Any> registerField(fieldClass: KProperty1<T, V>): FormField<V>
 
     val formState: State<FormResult<T>>
         @Composable get

@@ -19,5 +19,8 @@ import me.naingaungluu.formconductor.validation.rules.IsCheckedRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<Boolean>(IsCheckedRule::class)
+@FieldValidation<Boolean>(
+    fieldType = Boolean::class,
+    validator = IsCheckedRule::class
+)
 annotation class IsChecked

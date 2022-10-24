@@ -4,14 +4,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import me.naingaungluu.formconductor.annotations.FieldValidation
+import me.naingaungluu.formconductor.syntax.AnnotationSyntaxProcessor
+import me.naingaungluu.formconductor.syntax.SyntaxProcessor
+import me.naingaungluu.formconductor.syntax.SyntaxResult
+import me.naingaungluu.formconductor.syntax.getErrorMessage
 import me.naingaungluu.formconductor.validation.FieldValidator
 import me.naingaungluu.formconductor.validation.ValidationRule
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.javaField
+import kotlin.reflect.jvm.jvmName
 
 /**
  * An implementation of the [Form] interface
@@ -34,8 +42,20 @@ class FormImpl<T : Any>(
     override val formDataStream: Flow<FormResult<T>>
 
     init {
+        // Check requirements for form class
+        require(constructorRequirementSatisfied(formClass))
+
         // Fetch field list from class reference
         val fields = formClass.memberProperties.toSet()
+
+        // Check Syntax for each field
+        val syntaxProcessor: SyntaxProcessor = AnnotationSyntaxProcessor()
+        fields.forEach {
+            val syntaxResult = syntaxProcessor.process(it)
+            require(syntaxResult is SyntaxResult.Success) {
+                (syntaxResult as SyntaxResult.Error).getErrorMessage(formClass, it)
+            }
+        }
 
         // Assign each field a [FormField] object
         fieldMap = fields.associateWith { initializeField(it) }
@@ -106,6 +126,40 @@ class FormImpl<T : Any>(
     }
 
     /**
+     * Checks if constructor requirement are satisfied for form class
+     *
+     * @param formDataClass kotlin class reference of form data
+     * @return
+     */
+    private fun constructorRequirementSatisfied(formDataClass: KClass<T>): Boolean {
+        val primaryConstructor = formClass.primaryConstructor
+
+        val hasPrimaryConstructor = (primaryConstructor != null)
+
+        // All constructor parameter should be optional to allow optional input values
+        val hasDefaultConstructorParameters = primaryConstructor?.parameters?.all {
+            it.isOptional
+        } ?: false
+
+        // Member properties shouldn't be mutable since validated form data must not be mutated
+        val hasMutableProperties = formDataClass.memberProperties.any { it is KMutableProperty<*> }
+
+        return hasPrimaryConstructor && hasDefaultConstructorParameters && !hasMutableProperties
+    }
+
+    private fun <V : Any?> syntaxRequirementSatisfied(field: KProperty1<T, V>): Boolean {
+        val fieldValidationAnnotations = field.annotations.filter {
+            it.annotationClass.hasAnnotation<FieldValidation<*>>()
+        }
+        return fieldValidationAnnotations.all {
+            val validationAnnotation = it.annotationClass.findAnnotation<FieldValidation<*>>()
+            val allowedTypeName = validationAnnotation?.fieldType?.jvmName
+            val receivedTypeName = field.javaField?.type?.name
+            allowedTypeName == receivedTypeName
+        }
+    }
+
+    /**
      * A factory method that receives the property reference and constructs [FormField] object
      *
      * @param field kotlin property reference to the field
@@ -113,10 +167,10 @@ class FormImpl<T : Any>(
      */
     private fun initializeField(field: KProperty1<T, *>): FormField<Any> {
         // Fetches all the fields annotated with a valid [FieldValidation]
-        val optionalAnnotation = field.annotations.filter {
+        val fieldAnnotations = field.annotations.filter {
             it.annotationClass.hasAnnotation<FieldValidation<*>>()
         }
-        val validators = optionalAnnotation.map {
+        val validators = fieldAnnotations.map {
             val validationAnnotation = it.annotationClass.findAnnotation<FieldValidation<*>>()
             // Fetches the [ValidationRule] object from the annotation
             val validationRule = validationAnnotation?.validator?.objectInstance as ValidationRule<Any, Annotation>

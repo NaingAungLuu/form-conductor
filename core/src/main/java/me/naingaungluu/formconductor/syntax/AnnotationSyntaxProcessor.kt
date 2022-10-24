@@ -11,7 +11,7 @@ import kotlin.reflect.jvm.jvmName
  * A syntax processor to check type compatibility with fields
  *
  */
-class AnnotationSyntaxProcessor : SyntaxProcessor {
+internal class AnnotationSyntaxProcessor : SyntaxProcessor {
     override fun <T : Any, V : Any?> process(field: KProperty1<T, V>): SyntaxResult {
         val fieldValidationAnnotations = field.annotations.filter {
             it.annotationClass.hasAnnotation<FieldValidation<*>>()

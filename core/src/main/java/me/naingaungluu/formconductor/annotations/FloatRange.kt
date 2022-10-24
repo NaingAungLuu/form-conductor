@@ -19,7 +19,10 @@ import me.naingaungluu.formconductor.validation.rules.FloatRangeRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<Float>(FloatRangeRule::class)
+@FieldValidation<Float>(
+    fieldType = Float::class,
+    validator = FloatRangeRule::class
+)
 annotation class FloatRange(
     val min: Double,
     val max: Double

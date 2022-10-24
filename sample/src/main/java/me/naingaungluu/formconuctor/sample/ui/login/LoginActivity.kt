@@ -12,6 +12,8 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import me.naingaungluu.formconductor.builder.field
+import me.naingaungluu.formconductor.builder.form
 import me.naingaungluu.formconuctor.sample.R
 import me.naingaungluu.formconuctor.sample.databinding.ActivityLoginBinding
 
@@ -69,6 +71,16 @@ class LoginActivity : AppCompatActivity() {
                 finish()
             }
         )
+
+        val form = form(LoginFormData::class)
+
+        form.field(LoginFormData::username) {
+            username.afterTextChanged { this.setField(it) }
+        }
+
+        form.field(LoginFormData::password) {
+            password.afterTextChanged { this.setField(it) }
+        }
 
         password.apply {
             setOnEditorActionListener { _, actionId, _ ->

@@ -31,20 +31,20 @@ import me.naingaungluu.formconductor.validation.rules.MinLengthRule
 
 data class SignUpFormData(
     @MinLength(2)
-    var name: String = "",
+    val name: String = "",
 
     @IntegerRange(min = 0, max = 99)
-    var age: Int = 0,
+    val age: Int = 0,
 
     @MinLength(2)
     @MaxLength(10)
     @EmailAddress
-    var emailAddress: String = "",
+    val emailAddress: String = "",
 
-    var gender: Gender = Gender.Male,
+    val gender: Gender = Gender.Male,
 
     @IsChecked
-    var isMarried: Boolean = false
+    val isMarried: Boolean = false
 )
 
 sealed class Gender(val value: String) {

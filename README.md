@@ -342,14 +342,16 @@ dependencies {
 ```groovy
 // Groovy
 dependencies {
-    implementation "com.github.NaingAungLuu.form-conductor:core:0.2.0"
-    implementation "com.github.NaingAungLuu.form-conductor:compose-ui:0.2.0"
+    def form_conductor_version = '0.2.0'
+    implementation "com.github.NaingAungLuu.form-conductor:core:$form_conductor_version"
+    implementation "com.github.NaingAungLuu.form-conductor:compose-ui:$form_conductor_version"
 }
 
 // Kts
 dependencies {
-    implementation("com.github.NaingAungLuu.form-conductor:core:0.2.0")
-    implementation("com.github.NaingAungLuu.form-conductor:compose-ui:0.2.0")
+    val formConductorVersion = "0.2.0"
+    implementation("com.github.NaingAungLuu.form-conductor:core:$formConductorVersion")
+    implementation("com.github.NaingAungLuu.form-conductor:compose-ui:$formConductorVersion")
 }
 ```
 

@@ -3,7 +3,6 @@ package me.naingaungluu.formconductor.syntax
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-
 /**
  * A Helpful util function to produce proper error message
  *
@@ -13,7 +12,7 @@ import kotlin.reflect.KProperty
  * @param field KProperty reference of the field
  * @return Error message string
  */
-fun <T : Any, V : Any?> SyntaxResult.Error.getErrorMessage(
+internal fun <T : Any, V : Any?> SyntaxResult.Error.getErrorMessage(
     formClass: KClass<T>,
     field: KProperty<V>
 ): String {

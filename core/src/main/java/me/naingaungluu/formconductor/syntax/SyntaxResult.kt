@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty
  * Result types for Syntax Processor
  *
  */
-sealed class SyntaxResult {
+internal sealed class SyntaxResult {
     /**
      * Successful syntax
      */

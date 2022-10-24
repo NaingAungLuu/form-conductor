@@ -27,6 +27,8 @@ theme:
 
   icon:
     repo: fontawesome/brands/github
+  
+  logo: assets/scroll.png
 
 nav:
   - Documentation:
@@ -49,3 +51,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+
+plugins:
+  - social:
+      cards: true
+      cards_dir: assets/images/social

@@ -1,3 +1,8 @@
+---
+title: Documentation
+description: A declarative form validation library for Kotlin.
+icon: material/newspaper
+---
 # 📜 Form Conductor
 A declarative form validation library for Kotlin.
 

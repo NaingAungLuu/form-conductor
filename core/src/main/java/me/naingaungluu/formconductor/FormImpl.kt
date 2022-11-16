@@ -43,7 +43,7 @@ class FormImpl<T : Any>(
 
     init {
         // Check requirements for form class
-        require(constructorRequirementSatisfied(formClass))
+        checkMetadataRequirements(formClass)
 
         // Fetch field list from class reference
         val fields = formClass.memberProperties.toSet()
@@ -131,7 +131,7 @@ class FormImpl<T : Any>(
      * @param formDataClass kotlin class reference of form data
      * @return
      */
-    private fun constructorRequirementSatisfied(formDataClass: KClass<T>): Boolean {
+    private fun checkMetadataRequirements(formDataClass: KClass<T>) {
         val primaryConstructor = formClass.primaryConstructor
 
         val hasPrimaryConstructor = (primaryConstructor != null)
@@ -144,7 +144,27 @@ class FormImpl<T : Any>(
         // Member properties shouldn't be mutable since validated form data must not be mutated
         val hasMutableProperties = formDataClass.memberProperties.any { it is KMutableProperty<*> }
 
-        return hasPrimaryConstructor && hasDefaultConstructorParameters && !hasMutableProperties
+        require(hasPrimaryConstructor) {
+            "Form data class '${formDataClass.simpleName}' needs to have a primary constructor"
+        }
+
+        require(hasDefaultConstructorParameters) {
+            val nonOptionalParameters = primaryConstructor!!.parameters.filter { !it.isOptional }
+            """
+                Form data class '${formDataClass.simpleName}' needs to have a default constructor parameters.
+                Following parameters need to have a default value in the constructor:
+                ${nonOptionalParameters.map { it.name }}
+            """.trimIndent()
+        }
+
+        require(!hasMutableProperties) {
+            val mutableProperties = formDataClass.memberProperties.filter { it is KMutableProperty<*> }
+            """
+                Form data class '${formDataClass.simpleName}' cannot have mutable properties (var).
+                Following properties need to be immutable (val):
+                ${mutableProperties.map { it.name }}
+            """.trimIndent()
+        }
     }
 
     private fun <V : Any?> syntaxRequirementSatisfied(field: KProperty1<T, V>): Boolean {

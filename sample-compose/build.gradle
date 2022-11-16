@@ -7,6 +7,15 @@ android {
     namespace 'me.naingaungluu.formvalidation'
     compileSdk 33
 
+    signingConfigs {
+        create("release") {
+            storeFile file("../keystore/release.keystore")
+            storePassword 'releasekeystore'
+            keyAlias 'releasekey'
+            keyPassword 'releasekeystore'
+        }
+    }
+
     defaultConfig {
         applicationId "me.naingaungluu.formvalidation"
         minSdk 24
@@ -22,8 +31,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

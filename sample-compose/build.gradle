@@ -33,7 +33,8 @@ android {
         release {
             minifyEnabled = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig = signingConfigs.getByName("release")
+//            Uncomment following line to use release signing config
+//            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

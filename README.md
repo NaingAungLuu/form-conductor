@@ -16,9 +16,20 @@ Form conductor tries to tackle three aspects of forms:
 
 ## Table of contents
 
-- [Form construction using built-in annotations](#-form-construction-using-built-in-annotations)
-- [Using Jetpack Compose](#using-jetpack-compose)
-- [Installation](#installation)
+- [📜 Form Conductor](#-form-conductor)
+  - [Table of contents](#table-of-contents)
+  - [🔨 Form construction using built-in annotations](#-form-construction-using-built-in-annotations)
+  - [Using Jetpack Compose](#using-jetpack-compose)
+      - [Full Example](#full-example)
+  - [Using Traditional Form Building (Android and JVM apps)](#using-traditional-form-building-android-and-jvm-apps)
+    - [Declarative approach](#declarative-approach)
+    - [Imperative Approach](#imperative-approach)
+  - [Validation](#validation)
+  - [Custom Validations](#custom-validations)
+  - [Installation](#installation)
+      - [Single dependency (imports all the modules as a single dependency)](#single-dependency-imports-all-the-modules-as-a-single-dependency)
+      - [Modular dependency](#modular-dependency)
+      - [Available Modules](#available-modules)
 
 <br/>
 
@@ -49,6 +60,7 @@ data class SignUpForm(
     val bio: String = ""
 )
 ```
+<br><br>
 
 ## Using Jetpack Compose
 
@@ -130,6 +142,185 @@ fun FormScreen() {
     }
 }
 ```
+<br>
+<br>
+
+## Using Traditional Form Building (Android and JVM apps)
+
+<br>
+
+`LoginForm.kt`
+
+```kotlin
+data class LoginForm(
+
+    @EmailAddress
+    val emailAddress: String = "",
+
+    @MinLength(8)
+    val password: String = ""
+    
+)
+```
+
+<br/>
+
+### Declarative approach 
+
+`MainActivity.kt`
+
+```kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    
+    // Declarative Form Building
+    val formState = form(LoginForm::class) {
+
+        field(LoginForm::emailAddress) {
+
+            etEmailAddress.doAfterTextChanged {
+                this.setField(it)
+            }
+
+            this.resultStream.collectLatest {
+                when(it) {
+                    is FieldResult.Error -> {
+                       /**
+                        * Available properties in Error
+                        * message - internal error message : String
+                        * failedRule - ValidationRule<String, EmailAddress>
+                        * 
+                        * You can compose your error message as needed
+                        */
+                        etEmailAddress.error = it.message
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+<br/>
+
+### Imperative Approach
+
+`MainActivity.kt`
+
+```kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+     // Imperative Form Building
+    val formState = form(LoginForm::class)
+    val emailAddressState = form.field(LoginForm::emailAddress)
+    val passwordState = form.field(LoginForm::password)
+
+    etLogin.doAfterTextChanged {
+        emailAddressState.setField(it)
+    }
+    etPassword.doAfterTextChanged {
+        passwordState.setField(it)
+    }
+
+    emailAddresState.resultStream.collectLatest {
+        if (it is FieldResult.Error) {
+            etEmailAddress.error = it.message // or any error message as shown above
+        }
+    }
+    
+    formState.valueStream.collectLatest { result ->
+        btnLogin.enabled = (result is FormResult.Success)
+    }
+
+    btnLogin.setOnClickListener {
+        viewModel.login(formState.value)
+    }
+}
+```
+
+## Validation
+
+Available Validation Annotations
+
+```kotlin
+// String
+@EmailAddress
+
+@Optional
+
+@MaxLength(value)
+
+@MinLength(value)
+
+@WebUrl(httpRequired)
+
+
+// Number
+@FloatRange(min, max)
+
+@IntegerRange(min, max)
+
+
+// Boolean
+@IsChecked
+
+// More validations in development
+```
+
+<br/>
+
+The great thing about `form-conductor` is it's very flexible. Each Validation annotation is decoupled from Validation rules.
+
+If you don't like to use annotations, you can use from a list of built-in `ValidationRule` instead
+
+```kotlin
+// Each rule is associated to respective annotations
+
+EmailAddressRule.validate(value)
+
+FloatRangeRule.validate(value, FloatRange(min,max))
+
+WebUrlRule.validate(value, WebUrl(httpRequired = true))
+```
+
+<br/><br/>
+
+## Custom Validations
+
+Feeling adventurous or feel like built-in validation rules aren't enough for you?
+
+You can create your own validations rules and annotations to work with `form-conductor` instead. You can take advantage of `FieldValidation` annotation class and creat your custom annotations and validations.
+
+```kotlin
+// Custom Annotation
+
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.RUNTIME)
+@FieldValidation<LocalDate>(
+    fieldType = LocalDate::class,
+    validator = FutureDateRule::class
+)
+annotation class FutureDate
+
+
+// Custom validation rule
+
+object FutureDateRule : ValdiationRule<LocalDate, FutureDate> {
+    override fun validate(value: LocalDate, options: FutureDate): FieldResult {
+        // Your custom validation logic here
+    }
+}
+
+
+// Usage
+// This will automatically work with form-conductor
+
+data class FormData(
+    @FutureDate
+    val date: LocalDate
+)
+```
 
 ## Installation
 
@@ -137,28 +328,30 @@ fun FormScreen() {
 ```groovy
 // Groovy
 dependencies {
-    implementation "com.github.NaingAungLuu:form-conductor:$<latest_version>"
+    implementation "com.github.NaingAungLuu:form-conductor:0.2.0"
 }
 
 // Kts
 dependencies {
-    implementation("com.github.NaingAungLuu:form-conductor:$<latest_version>")
+    implementation("com.github.NaingAungLuu:form-conductor:0.2.0")
 }
 ```
 
 
 #### Modular dependency
-```kts
+```groovy
 // Groovy
 dependencies {
-    implementation "com.github.NaingAungLuu.form-conductor:core:$<latest_version>"
-    implementation "com.github.NaingAungLuu.form-conductor:compose-ui:$<latest_version>"
+    def form_conductor_version = '0.2.0'
+    implementation "com.github.NaingAungLuu.form-conductor:core:$form_conductor_version"
+    implementation "com.github.NaingAungLuu.form-conductor:compose-ui:$form_conductor_version"
 }
 
 // Kts
 dependencies {
-    implementation("com.github.NaingAungLuu.form-conductor:core:$<latest_version>")
-    implementation("com.github.NaingAungLuu.form-conductor:compose-ui:$<latest_version>")
+    val formConductorVersion = "0.2.0"
+    implementation("com.github.NaingAungLuu.form-conductor:core:$formConductorVersion")
+    implementation("com.github.NaingAungLuu.form-conductor:compose-ui:$formConductorVersion")
 }
 ```
 

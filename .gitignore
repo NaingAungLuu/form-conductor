@@ -17,3 +17,5 @@ local.properties
 .idea/
 
 core/bin/
+
+.cache/

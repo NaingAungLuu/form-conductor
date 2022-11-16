@@ -1,4 +1,5 @@
 site_name: Form Conductor
+site_url: https://naingaungluu.github.io/form-conductor
 repo_url: https://github.com/NaingAungLuu/form-conductor
 repo_name: form-conductor
 theme:
@@ -27,6 +28,8 @@ theme:
 
   icon:
     repo: fontawesome/brands/github
+  
+  logo: assets/scroll.png
 
 nav:
   - Documentation:
@@ -49,3 +52,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+
+plugins:
+  - social:
+      cards: true
+      cards_dir: assets/images/social

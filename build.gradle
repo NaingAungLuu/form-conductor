@@ -10,6 +10,6 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.10' apply false
 }
 allprojects {
-    version = "0.2.2"
+    version = "0.2.3"
     group = "me.naingaungluu.form-conductor"
 }

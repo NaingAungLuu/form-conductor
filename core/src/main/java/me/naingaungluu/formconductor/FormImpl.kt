@@ -132,7 +132,7 @@ class FormImpl<T : Any>(
      * @return
      */
     private fun checkMetadataRequirements(formDataClass: KClass<T>) {
-        val primaryConstructor = formClass.primaryConstructor
+        val primaryConstructor = formClass.constructors.firstOrNull()
 
         val hasPrimaryConstructor = (primaryConstructor != null)
 

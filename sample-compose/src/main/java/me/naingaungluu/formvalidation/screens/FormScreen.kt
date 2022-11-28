@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.naingaungluu.formconductor.annotations.EmailAddress
+import me.naingaungluu.formconductor.annotations.Form
 import me.naingaungluu.formconductor.annotations.IntegerRange
 import me.naingaungluu.formconductor.annotations.IsChecked
 import me.naingaungluu.formconductor.annotations.MaxLength
@@ -29,6 +30,7 @@ import me.naingaungluu.formconductor.validation.rules.EmailAddressRule
 import me.naingaungluu.formconductor.validation.rules.MaxLengthRule
 import me.naingaungluu.formconductor.validation.rules.MinLengthRule
 
+@Form
 data class SignUpFormData(
     @MinLength(2)
     val name: String = "",
@@ -53,7 +55,7 @@ sealed class Gender(val value: String) {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun FormScreen() {
     // API Spec

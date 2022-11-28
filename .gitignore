@@ -17,3 +17,7 @@ local.properties
 .idea/
 
 core/bin/
+
+.cache/
+
+keystore/release.keystore

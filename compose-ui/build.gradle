@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.support.KotlinCompilerKt
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
@@ -9,7 +11,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        minSdk 24
+        minSdk 23
         targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -34,13 +36,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        javaParameters = true
     }
 }
 
 dependencies {
-//    implementation 'androidx.core:core-ktx:1.7.0'
-//    implementation 'androidx.appcompat:appcompat:1.5.1'
-//    implementation 'com.google.android.material:material:1.6.1'
     implementation project(path: ':core')
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.runtime:runtime:$compose_version"

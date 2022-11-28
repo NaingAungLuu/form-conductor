@@ -11,5 +11,5 @@ import me.naingaungluu.formconductor.FieldResult
  * @param A Type of associated annotation class
  */
 interface ValidationRule<T : Any?, A : Annotation> {
-    fun validate(value: T, options: A): FieldResult
+    fun validate(value: T, options: A): FieldResult<Any?>
 }

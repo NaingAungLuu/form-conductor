@@ -15,7 +15,7 @@ internal class FormFieldScopeImpl<V : Any>(
         @Composable
         get() = formField.valueStream.collectAsState(null)
 
-    override val resultState: State<FieldResult>
+    override val resultState: State<FieldResult<Any?>>
         @Composable
         get() = formField.resultStream.collectAsState(FieldResult.NoInput)
 

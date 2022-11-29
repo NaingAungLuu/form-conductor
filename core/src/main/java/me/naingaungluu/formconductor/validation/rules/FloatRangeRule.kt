@@ -23,7 +23,7 @@ object FloatRangeRule : ValidationRule<Float, FloatRange> {
      * @param options [FloatRange] object annotated to the field
      * @return [FieldResult]
      */
-    override fun validate(value: Float, options: FloatRange): FieldResult<Any?> {
+    override fun validate(value: Float, options: FloatRange): FieldResult {
         val validationSuccess = (value >= options.min) && (value <= options.max)
         return if (validationSuccess) {
             FieldResult.Success

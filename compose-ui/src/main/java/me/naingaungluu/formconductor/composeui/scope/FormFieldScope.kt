@@ -23,7 +23,7 @@ interface FormFieldScope<V : Any> {
      *
      * You can use this for validation results
      */
-    val resultState: State<FieldResult<Any?>>
+    val resultState: State<FieldResult>
         @Composable get
 
     /**

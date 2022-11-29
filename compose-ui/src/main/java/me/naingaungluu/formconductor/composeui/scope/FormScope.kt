@@ -22,6 +22,10 @@ interface FormScope<T : Any> {
      */
     fun <V : Any> registerField(fieldClass: KProperty1<T, V>): FormField<V>
 
+    fun validate(): FormResult<T>
+
+    fun submit(payload: T): FormResult<T>
+
     val formState: State<FormResult<T>>
         @Composable get
 }

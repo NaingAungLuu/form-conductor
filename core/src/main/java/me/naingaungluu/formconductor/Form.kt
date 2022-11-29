@@ -29,4 +29,8 @@ interface Form<T : Any> {
      * @param value new field value
      */
     fun <V : Any> setField(fieldClass: KProperty1<T, V>, value: V)
+
+    fun validate(): FormResult<T>
+
+    fun submit(payload: T): FormResult<T>
 }

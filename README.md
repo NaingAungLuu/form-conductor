@@ -18,6 +18,7 @@ Form conductor tries to tackle three aspects of forms:
 
 - [📜 Form Conductor](#-form-conductor)
   - [Table of contents](#table-of-contents)
+  - [Documentation](#documentation)
   - [🔨 Form construction using built-in annotations](#-form-construction-using-built-in-annotations)
   - [Using Jetpack Compose](#using-jetpack-compose)
       - [Full Example](#full-example)
@@ -33,10 +34,17 @@ Form conductor tries to tackle three aspects of forms:
 
 <br/>
 
+## Documentation
+
+Please check [the documentation webpage](https://naingaungluu.github.io/form-conductor) webpage o fully utitlize the power of `form-conductor` library.
+
+<br/>
+
 ## 🔨 Form construction using built-in annotations
 
 FormData.kt
 ```kotlin
+@Form
 data class SignUpForm(
     @MinLength(2)
     val name: String = "",
@@ -328,12 +336,12 @@ data class FormData(
 ```groovy
 // Groovy
 dependencies {
-    implementation "com.github.NaingAungLuu:form-conductor:0.2.0"
+    implementation "com.github.NaingAungLuu:form-conductor:0.2.3"
 }
 
 // Kts
 dependencies {
-    implementation("com.github.NaingAungLuu:form-conductor:0.2.0")
+    implementation("com.github.NaingAungLuu:form-conductor:0.2.3")
 }
 ```
 
@@ -342,14 +350,14 @@ dependencies {
 ```groovy
 // Groovy
 dependencies {
-    def form_conductor_version = '0.2.0'
+    def form_conductor_version = '0.2.3'
     implementation "com.github.NaingAungLuu.form-conductor:core:$form_conductor_version"
     implementation "com.github.NaingAungLuu.form-conductor:compose-ui:$form_conductor_version"
 }
 
 // Kts
 dependencies {
-    val formConductorVersion = "0.2.0"
+    val formConductorVersion = "0.2.3"
     implementation("com.github.NaingAungLuu.form-conductor:core:$formConductorVersion")
     implementation("com.github.NaingAungLuu.form-conductor:compose-ui:$formConductorVersion")
 }

@@ -24,7 +24,7 @@ internal class FieldValidator<T : Any?, A : Annotation>(
      * @param input value of type [T]
      * @return
      */
-    fun validate(input: T): FieldResult<Any?> {
+    fun validate(input: T): FieldResult {
         return validationRule.validate(input, options)
     }
 }

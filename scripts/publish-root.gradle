@@ -1,0 +1,50 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = project.group
+            version = project.version
+
+            pom {
+                System.out.println("Using artifactID" + artifactId)
+                name = artifactId
+                description = "Declarative form validation library for Jetpack Compose"
+                url = "https://github.com/NaingAungLuu/form-conductor"
+                licenses {
+                    license {
+                        name = "MIT License"
+                        url = "https://opensource.org/licenses/MIT"
+                    }
+                }
+                scm {
+                    connection = "scm:git@github.com:NaingAungLuu/form-conductor.git"
+                    url = "https://github.com/NaingAungLuu/form-conductor"
+                }
+                developers {
+                    developer {
+                        id = "NaingAungLuu"
+                        name = "Naing Aung Luu"
+                        email = "naingaunglu01@gmail.com"
+                        url = "https://github.com/NaingAungLuu"
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username = "$SONATYPE_NEXUS_USERNAME"
+                password = "$SONATYPE_NEXUS_PASSWORD"
+            }
+            name = "mavenCentral"
+            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.release
+}

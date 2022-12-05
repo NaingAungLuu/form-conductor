@@ -28,7 +28,7 @@ object EmailAddressRule : ValidationRule<String, EmailAddress> {
      * @param options [EmailAddress] object annotated to the field
      * @return [FieldResult]
      */
-    override fun validate(value: String, options: EmailAddress): FieldResult {
+    override fun validate(value: String, options: EmailAddress): FieldResult<Any?> {
         return if (value.matches(emailPattern.toRegex())) {
             FieldResult.Success
         } else if (value.isEmpty()) {

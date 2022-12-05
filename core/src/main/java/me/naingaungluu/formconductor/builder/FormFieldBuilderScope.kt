@@ -7,7 +7,7 @@ import me.naingaungluu.formconductor.FieldValue
 interface FormFieldBuilderScope<V : Any> {
     val state: StateFlow<FieldValue<V>>
 
-    val resultState: StateFlow<FieldResult>
+    val resultState: StateFlow<FieldResult<Any?>>
 
     fun setField(input: V?)
 }

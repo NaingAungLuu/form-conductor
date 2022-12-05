@@ -13,7 +13,7 @@ class FormFieldBuilderScopeImpl<V : Any>(
     override val state: StateFlow<FieldValue<V>>
         get() = formField.valueStream.asStateFlow()
 
-    override val resultState: StateFlow<FieldResult>
+    override val resultState: StateFlow<FieldResult<Any?>>
         get() = formField.resultStream.asStateFlow()
 
     override fun setField(input: V?) {

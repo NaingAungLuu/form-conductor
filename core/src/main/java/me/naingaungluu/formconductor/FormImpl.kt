@@ -3,6 +3,7 @@ package me.naingaungluu.formconductor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import me.naingaungluu.formconductor.annotations.FieldValidation
 import me.naingaungluu.formconductor.syntax.AnnotationSyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxProcessor
@@ -13,6 +14,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
@@ -63,27 +65,28 @@ class FormImpl<T : Any>(
         // Observe a list of upstream flows from each of the [FormField] object
         formDataStream = combine(
             fieldMap.values.map { it.valueStream.asSharedFlow() }
-        ) { _ ->
+        ) {
 
             /*
                 Fetch field results (Note: We allow FieldResult.NoInput as successful validation)
              */
-            val resultStreams = fieldMap.values.map { it.resultStream.value }
-            val formSuccess = resultStreams.all {
-                it is FieldResult.Success || it is FieldResult.NoInput
-            }
-
-            if (formSuccess) {
-                val formData = constructFormData()
-                FormResult.Success(formData)
-            } else {
-                // Fetch failed rules in case of error
-                val failedRules = resultStreams
-                    .filterIsInstance<FieldResult.Error>()
-                    .map { it.failedRule }
-
-                FormResult.Error(failedRules.toSet())
-            }
+            validate()
+//            val resultStreams = fieldMap.values.map { it.resultStream.value }
+//            val formSuccess = resultStreams.all {
+//                it is FieldResult.Success || it is FieldResult.NoInput
+//            }
+//
+//            if (formSuccess) {
+//                val formData = constructFormData()
+//                FormResult.Success(formData)
+//            } else {
+//                // Fetch failed rules in case of error
+//                val failedRules = resultStreams
+//                    .filterIsInstance<FieldResult.Error>()
+//                    .map { it.failedRule }
+//
+//                FormResult.Error(failedRules.toSet())
+//            }
         }
     }
 
@@ -232,5 +235,33 @@ class FormImpl<T : Any>(
             }
 
         return constructor.callBy(argumentMap)
+    }
+
+    override fun submit(payload: T): FormResult<T> {
+        formClass.memberProperties.map {
+            it.get(payload)?.let { value ->
+                setField(it as KProperty1<T, Any>, value)
+            }
+        }
+        return validate()
+    }
+
+    override fun validate(): FormResult<T> {
+        val resultStreams = fieldMap.values.map { it.resultStream.value }
+        val formSuccess = resultStreams.all {
+            it is FieldResult.Success || it is FieldResult.NoInput
+        }
+
+        return if (formSuccess) {
+            val formData = constructFormData()
+            FormResult.Success(formData)
+        } else {
+            // Fetch failed rules in case of error
+            val failedRules = resultStreams
+                .filterIsInstance<FieldResult.Error>()
+                .map { it.failedRule }
+
+            FormResult.Error(failedRules.toSet())
+        }
     }
 }

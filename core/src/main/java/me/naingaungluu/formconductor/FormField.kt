@@ -29,6 +29,11 @@ interface FormField<V : Any> {
     val fieldName: String
 
     /**
+     * Optional Flag
+     */
+    val isOptional: Boolean
+
+    /**
      * Sets the value of the field
      *
      * The function validates the field if the input is not **empty** or the field isn't **optional**

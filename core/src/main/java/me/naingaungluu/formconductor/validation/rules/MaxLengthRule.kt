@@ -26,7 +26,7 @@ object MaxLengthRule : ValidationRule<String, MaxLength> {
      * @param options [MaxLength] object annotated to the field
      * @return [FieldResult]
      */
-    override fun validate(value: String, options: MaxLength): FieldResult<Any?> {
+    override fun validate(value: String, options: MaxLength): FieldResult {
         val validationSuccess = value.count() <= options.value
         return if (validationSuccess) {
             FieldResult.Success

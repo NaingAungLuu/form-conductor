@@ -26,7 +26,7 @@ object MinLengthRule : ValidationRule<String, MinLength> {
      * @param options [MinLength] object annotated to the field
      * @return [FieldResult]
      */
-    override fun validate(value: String, options: MinLength): FieldResult<Any?> {
+    override fun validate(value: String, options: MinLength): FieldResult {
         val validationSuccess = value.count() >= options.value
         return if (validationSuccess) {
             FieldResult.Success

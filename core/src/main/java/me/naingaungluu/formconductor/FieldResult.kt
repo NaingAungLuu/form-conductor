@@ -6,12 +6,12 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * Returns after a field validation as a result
  *
  */
-sealed class FieldResult<T> {
+sealed class FieldResult {
 
     /**
      * Successful Validation
      */
-    object Success : FieldResult<Any?>()
+    object Success : FieldResult()
 
     /**
      * Error type of FieldResult
@@ -22,7 +22,7 @@ sealed class FieldResult<T> {
     data class Error(
         val message: String,
         val failedRule: ValidationRule<*, *>
-    ) : FieldResult<Any?>()
+    ) : FieldResult()
 
     /**
      * Special case when the field has no interaction with user yet,
@@ -30,5 +30,5 @@ sealed class FieldResult<T> {
      *
      * This is particularly useful when initializing a field value
      */
-    object NoInput : FieldResult<Any?>()
+    object NoInput : FieldResult()
 }

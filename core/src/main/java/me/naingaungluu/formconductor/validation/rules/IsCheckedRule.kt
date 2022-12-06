@@ -23,7 +23,7 @@ object IsCheckedRule : ValidationRule<Boolean, IsChecked> {
      * @param options [IsChecked] object annotated to the field
      * @return [FieldResult]
      */
-    override fun validate(value: Boolean, options: IsChecked): FieldResult<Any?> {
+    override fun validate(value: Boolean, options: IsChecked): FieldResult {
         return if (value) {
             FieldResult.Success
         } else {

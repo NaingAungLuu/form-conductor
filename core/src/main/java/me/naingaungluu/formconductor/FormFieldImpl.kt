@@ -40,7 +40,9 @@ internal class FormFieldImpl<T : Any, V : Any>(
      */
     override fun setField(input: V?) {
         valueStream.value = valueStream.value.copy(value = input)
-        if (input != null) {
+
+        // Null and empty strings are skipped for validation
+        if (input != null && input != "") {
             resultStream.value = validate(input)
         } else {
             resultStream.value = if (isOptional) {

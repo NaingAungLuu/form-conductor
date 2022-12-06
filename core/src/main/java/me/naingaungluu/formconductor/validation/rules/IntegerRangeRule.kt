@@ -24,7 +24,7 @@ object IntegerRangeRule : ValidationRule<Int, IntegerRange> {
      * @param options [IntegerRange] object annotated to the field
      * @return [FieldResult]
      */
-    override fun validate(value: Int, options: IntegerRange): FieldResult<Any?> {
+    override fun validate(value: Int, options: IntegerRange): FieldResult {
         val validationSuccess = (value >= options.min) && (value <= options.max)
         return if (validationSuccess) {
             FieldResult.Success

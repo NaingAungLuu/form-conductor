@@ -26,7 +26,7 @@ internal class FormFieldImpl<T : Any, V : Any>(
         FieldValue(null)
     )
 
-    override val resultStream: MutableStateFlow<FieldResult<Any?>> = MutableStateFlow(FieldResult.NoInput)
+    override val resultStream: MutableStateFlow<FieldResult> = MutableStateFlow(FieldResult.NoInput)
 
     override val value: V?
         get() = valueStream.value.value
@@ -59,7 +59,7 @@ internal class FormFieldImpl<T : Any, V : Any>(
      * @param input input value of type [V]
      * @return [FieldResult] object after validation
      */
-    override fun validate(input: V): FieldResult<Any?> {
+    override fun validate(input: V): FieldResult {
         // Validate using each of the validators
         val validationResult = validators.map { it.validate(input) }
 

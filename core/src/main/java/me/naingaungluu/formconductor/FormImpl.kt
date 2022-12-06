@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import me.naingaungluu.formconductor.annotations.FieldValidation
+import me.naingaungluu.formconductor.annotations.Optional
 import me.naingaungluu.formconductor.syntax.AnnotationSyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxResult
@@ -14,7 +15,6 @@ import me.naingaungluu.formconductor.validation.ValidationRule
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KParameter
-import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
@@ -193,6 +193,7 @@ class FormImpl<T : Any>(
         val fieldAnnotations = field.annotations.filter {
             it.annotationClass.hasAnnotation<FieldValidation<*>>()
         }
+        val isFieldOptional = field.hasAnnotation<Optional>()
         val validators = fieldAnnotations.map {
             val validationAnnotation = it.annotationClass.findAnnotation<FieldValidation<*>>()
             // Fetches the [ValidationRule] object from the annotation
@@ -206,7 +207,8 @@ class FormImpl<T : Any>(
 
         return FormFieldImpl(
             fieldClass = field as KProperty1<T, Any>,
-            validators = validators
+            validators = validators,
+            isOptional = isFieldOptional
         )
     }
 
@@ -247,17 +249,34 @@ class FormImpl<T : Any>(
     }
 
     override fun validate(): FormResult<T> {
-        val resultStreams = fieldMap.values.map { it.resultStream.value }
-        val formSuccess = resultStreams.all {
-            it is FieldResult.Success || it is FieldResult.NoInput
+        val mandatoryFields = fieldMap.values.filterNot { it.isOptional }
+
+        val optionalFields = fieldMap.values.filter { it.isOptional }
+            .map { it.resultStream.value }
+
+        val shouldSkipValidation = mandatoryFields.all { it.resultStream.value is FieldResult.NoInput }
+
+        if (shouldSkipValidation) {
+            return FormResult.NoInput
         }
+
+        val mandatoryFieldsValidated = mandatoryFields
+            .map { it.resultStream.value }
+            .all { it is FieldResult.Success }
+
+        val optionalFieldsValidated = fieldMap.filter { it.value.isOptional }
+            .map { it.value.resultStream.value }
+            .none { it is FieldResult.Error }
+
+        val formSuccess = mandatoryFieldsValidated && optionalFieldsValidated
 
         return if (formSuccess) {
             val formData = constructFormData()
             FormResult.Success(formData)
         } else {
             // Fetch failed rules in case of error
-            val failedRules = resultStreams
+            val failedRules = fieldMap.values
+                .map { it.resultStream.value }
                 .filterIsInstance<FieldResult.Error>()
                 .map { it.failedRule }
 

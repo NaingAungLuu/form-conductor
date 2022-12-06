@@ -17,7 +17,7 @@ import kotlin.reflect.KProperty1
 internal class FormFieldImpl<T : Any, V : Any>(
     private val fieldClass: KProperty1<T, V>,
     private val validators: Set<FieldValidator<V, *>> = emptySet(),
-    private val isOptional: Boolean = false
+    override val isOptional: Boolean = false
 ) : FormField<V> {
 
     override val fieldName: String = fieldClass.name

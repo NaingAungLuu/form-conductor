@@ -36,7 +36,7 @@ object WebUrlRule : ValidationRule<String, WebUrl> {
      * @param options [MinLength] object annotated to the field
      * @return [FieldResult]
      */
-    override fun validate(value: String, options: WebUrl): FieldResult {
+    override fun validate(value: String, options: WebUrl): FieldResult<Any?> {
         val pattern = if (options.httpRequired) {
             HTTP_URL_PATTERN.toRegex()
         } else {

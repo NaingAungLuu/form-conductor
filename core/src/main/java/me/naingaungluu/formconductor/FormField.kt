@@ -21,12 +21,17 @@ interface FormField<V : Any> {
      *
      * Use this stream to get validation results
      */
-    val resultStream: MutableStateFlow<FieldResult>
+    val resultStream: MutableStateFlow<FieldResult<Any?>>
 
     /**
      * Field name property
      */
     val fieldName: String
+
+    /**
+     * Optional Flag
+     */
+    val isOptional: Boolean
 
     /**
      * Sets the value of the field
@@ -43,5 +48,5 @@ interface FormField<V : Any> {
      * @param input An input value of the same type as the filed
      * @return [FieldResult] object after validation
      */
-    fun validate(input: V): FieldResult
+    fun validate(input: V): FieldResult<Any?>
 }

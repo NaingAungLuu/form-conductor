@@ -1,12 +1,13 @@
 plugins {
     id 'java-library'
     id 'org.jetbrains.kotlin.jvm'
-    id 'maven-publish'
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
+    withJavadocJar()
+    withSourcesJar()
 }
 
 dependencies {
@@ -14,16 +15,13 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                from components.java
+apply from: "../scripts/publish-root.gradle"
 
-                groupId project.group
-                artifactId project.name
-                version project.version
-            }
+publishing {
+    publications {
+        release(MavenPublication) {
+            artifactId = "core"
+            from components.java
         }
     }
 }

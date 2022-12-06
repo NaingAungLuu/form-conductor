@@ -16,7 +16,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  */
 object OptionalRule : ValidationRule<Any?, Optional> {
     // Nothing much here
-    override fun validate(value: Any?, options: Optional): FieldResult {
+    override fun validate(value: Any?, options: Optional): FieldResult<Any?> {
         return FieldResult.Success
     }
 }

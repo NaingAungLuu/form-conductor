@@ -11,6 +11,6 @@ plugins {
     id "org.jetbrains.kotlin.kapt" version "1.7.10"
 }
 allprojects {
-    version = "0.2.3"
+    version = "0.3.1"
     group = "me.naingaungluu.formconductor"
 }

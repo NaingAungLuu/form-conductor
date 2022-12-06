@@ -12,5 +12,5 @@ plugins {
 }
 allprojects {
     version = "0.2.3"
-    group = "me.naingaungluu.form-conductor"
+    group = "me.naingaungluu.formconductor"
 }

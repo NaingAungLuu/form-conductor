@@ -1,9 +1,6 @@
-import org.gradle.kotlin.dsl.support.KotlinCompilerKt
-
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'maven-publish'
 }
 
 android {
@@ -38,6 +35,14 @@ android {
         jvmTarget = '1.8'
         javaParameters = true
     }
+
+    publishing {
+        singleVariant("release") {
+            // if you don't want sources/javadoc, remove these lines
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {
@@ -49,15 +54,14 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
+apply from: "../scripts/publish-root.gradle"
 
-                groupId "com.github.naingaungluu.form-conductor"
-                artifactId project.name
-                version project.version
+publishing {
+    publications {
+        release(MavenPublication) {
+            artifactId = "compose-ui"
+            afterEvaluate {
+                from components.release
             }
         }
     }

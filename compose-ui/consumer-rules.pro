@@ -1,18 +1,32 @@
 -keep class me.naingaungluu.formconductor.composeui.* { *; }
--keep class kotlin.reflect.jvm.internal.** { *; }
--keep class kotlin.Metadata { *; }
 -keep class me.naingaungluu.formconductor.validation.* { *; }
 -keepclassmembers class * extends me.naingaungluu.formconductor.validation.ValidationRule {
     public static <fields>;
  }
 -keep class me.naingaungluu.formconductor.annotations.* { *; }
--keepattributes RuntimeVisibleAnnotations
--keep class * {
+
+-keepattributes *Annotation*,Signature,InnerClasses
+
+# Keep classes and properties annotated with @Form
+-if @me.naingaungluu.formconductor.annotations.Form class **
+-keepclassmembers,allowobfuscation class <1> {
     <init>(...);
-    @me.naingaungluu.formconductor.annotations.* *;
+    <fields>;
+}
+
+# keep all classes annotated with @Form all the classes referenced in that @Form class
+-if @me.naingaungluu.formconductor.annotations.Form class ** {
+    ** *;
+}
+-keep class <1> {
+    <init>(...);
+    <fields>;
 }
 -keep @me.naingaungluu.formconductor.annotations.** class * { *; }
 -keep @me.naingaungluu.formconductor.annotations.Form class * {
    *;
  }
--keep,allowobfuscation class me.naingaungluu.formconductor.**
+ -keep,allowobfuscation @me.naingaungluu.formconductor.annotations.Form class * {
+    *;
+  }
+-keep class me.naingaungluu.formconductor.** { *; }

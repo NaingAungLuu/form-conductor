@@ -3,7 +3,18 @@ title: Home
 description: A declarative form validation library for Kotlin.
 icon: material/newspaper
 ---
-# 📜 Form Conductor
+
+<!-- <p align="center" size="200px">
+  <img src="assets/logo.png" />
+</p> -->
+
+<!-- <div style="text-align:center"><img width="20%" src="assets/logo.png"/><br/><br/><br/></div>
+
+![Image](assets/logo.png "Form Conductor") -->
+
+<img src="assets/logo_transparent.png" alt="alt text" width="150"/>
+
+# Form Conductor
 A declarative form validation library for Kotlin.
 
 Form conductor is more than form validation. It provides a handful of reusable API to construct a form in simple easy steps.

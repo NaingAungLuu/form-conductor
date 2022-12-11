@@ -8,9 +8,14 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    environment: library-publish
+    env:
+        SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+        SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+        SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+        PGP_KEY_CONTENTS: ${{ secrets.PGP_KEY_CONTENTS }}
     steps:
     - uses: actions/checkout@v3
     - name: set up JDK 11

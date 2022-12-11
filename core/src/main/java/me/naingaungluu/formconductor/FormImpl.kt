@@ -66,27 +66,8 @@ class FormImpl<T : Any>(
         formDataStream = combine(
             fieldMap.values.map { it.valueStream.asSharedFlow() }
         ) {
-
-            /*
-                Fetch field results (Note: We allow FieldResult.NoInput as successful validation)
-             */
+            /* Fetch field results (Note: We allow FieldResult.NoInput as successful validation) */
             validate()
-//            val resultStreams = fieldMap.values.map { it.resultStream.value }
-//            val formSuccess = resultStreams.all {
-//                it is FieldResult.Success || it is FieldResult.NoInput
-//            }
-//
-//            if (formSuccess) {
-//                val formData = constructFormData()
-//                FormResult.Success(formData)
-//            } else {
-//                // Fetch failed rules in case of error
-//                val failedRules = resultStreams
-//                    .filterIsInstance<FieldResult.Error>()
-//                    .map { it.failedRule }
-//
-//                FormResult.Error(failedRules.toSet())
-//            }
         }
     }
 
@@ -167,18 +148,6 @@ class FormImpl<T : Any>(
                 Following properties need to be immutable (val):
                 ${mutableProperties.map { it.name }}
             """.trimIndent()
-        }
-    }
-
-    private fun <V : Any?> syntaxRequirementSatisfied(field: KProperty1<T, V>): Boolean {
-        val fieldValidationAnnotations = field.annotations.filter {
-            it.annotationClass.hasAnnotation<FieldValidation<*>>()
-        }
-        return fieldValidationAnnotations.all {
-            val validationAnnotation = it.annotationClass.findAnnotation<FieldValidation<*>>()
-            val allowedTypeName = validationAnnotation?.fieldType?.jvmName
-            val receivedTypeName = field.javaField?.type?.name
-            allowedTypeName == receivedTypeName
         }
     }
 

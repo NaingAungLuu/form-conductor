@@ -36,8 +36,8 @@ publishing {
     repositories {
         maven {
             credentials {
-                username = "$SONATYPE_NEXUS_USERNAME"
-                password = "$SONATYPE_NEXUS_PASSWORD"
+                username = "$ossrhUsername"
+                password = "$ossrhPassword"
             }
             name = "mavenCentral"
             url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'

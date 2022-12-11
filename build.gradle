@@ -2,6 +2,9 @@ buildscript {
     ext {
         compose_version = '1.3.0'
     }
+    dependencies {
+        classpath "org.jacoco:org.jacoco.core:0.8.6"
+    }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id 'com.android.application' version '7.3.1' apply false
@@ -11,7 +14,43 @@ plugins {
     id "org.jetbrains.kotlin.kapt" version "1.7.10" apply false
     id "org.jetbrains.kotlinx.kover" version "0.6.1" apply false
 }
+
+// Initialize publishing/signing extra properties with environmental vars
+ext['signing.keyId'] = System.getenv('SIGNING_KEY_ID') ?: ''
+ext['signing.password'] = System.getenv('SIGNING_PASSWORD') ?: ''
+ext['signing.secretKeyRingFile'] = System.getenv('SIGNING_SECRET_KEY_RING_FILE') ?: ''
+ext['ossrhUsername'] = System.getenv('SONATYPE_NEXUS_USERNAME') ?: ''
+ext['ossrhPassword'] = System.getenv('SONATYPE_NEXUS_PASSWORD') ?: ''
+
+// Override with local.properties if available
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        ext[name] = value
+    }
+}
+
+// If the key content is in an environmental var, write it to "tmp/key.pgp" and update
+// ext['signing.secretKeyRingFile'] to point to it
+def pgpKeyContent = System.getenv('PGP_KEY_CONTENTS')
+if (pgpKeyContent != null) {
+    def tmpDir = new File("$rootProject.rootDir/tmp")
+    mkdir tmpDir
+    def keyFile = new File("$tmpDir/key.pgp")
+    keyFile.createNewFile()
+    def os = keyFile.newDataOutputStream()
+    os.write(pgpKeyContent.decodeBase64())
+    os.close()
+    pgpKeyContent = ''
+
+    ext['signing.secretKeyRingFile'] = keyFile.absolutePath
+}
+
 allprojects {
     version = "0.3.2"
     group = "me.naingaungluu.formconductor"
+
+    apply plugin: 'jacoco'
 }

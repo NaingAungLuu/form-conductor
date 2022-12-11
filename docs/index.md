@@ -26,8 +26,9 @@ Form conductor tries to tackle three aspects of forms:
 <br/>
 
 ![JitPack](https://img.shields.io/jitpack/version/com.github.NaingAungLuu/form-conductor?style=for-the-badge)
-![GitHub](https://img.shields.io/github/license/NaingAungLuu/form-conductor?style=for-the-badge)
+![Codecov](https://img.shields.io/codecov/c/github/NaingAungLuu/form-conductor?style=for-the-badge&token=KC7CK5DOZZ)
 ![GitHub issues](https://img.shields.io/github/issues/NaingAungLuu/form-conductor?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/NaingAungLuu/form-conductor?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/NaingAungLuu/form-conductor?style=for-the-badge)
 
 <!-- ## Table of contents

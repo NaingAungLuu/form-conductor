@@ -15,13 +15,11 @@ import me.naingaungluu.formconductor.validation.ValidationRule
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.jvm.javaField
-import kotlin.reflect.jvm.jvmName
 
 /**
  * An implementation of the [Form] interface
@@ -210,9 +208,9 @@ class FormImpl<T : Any>(
 
     override fun submit(payload: T): FormResult<T> {
         formClass.memberProperties.map {
-            it.get(payload)?.let { value ->
-                setField(it as KProperty1<T, Any>, value)
-            }
+            it to it.getValue(payload, it)
+        }.forEach { (property, value) ->
+            setField(property as KProperty1<T, Any>, value as Any)
         }
         return validate()
     }
@@ -233,8 +231,7 @@ class FormImpl<T : Any>(
             .map { it.resultStream.value }
             .all { it is FieldResult.Success }
 
-        val optionalFieldsValidated = fieldMap.filter { it.value.isOptional }
-            .map { it.value.resultStream.value }
+        val optionalFieldsValidated = optionalFields
             .none { it is FieldResult.Error }
 
         val formSuccess = mandatoryFieldsValidated && optionalFieldsValidated

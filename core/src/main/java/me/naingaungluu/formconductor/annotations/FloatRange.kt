@@ -1,6 +1,7 @@
 package me.naingaungluu.formconductor.annotations
 
 import me.naingaungluu.formconductor.validation.rules.FloatRangeRule
+import kotlin.reflect.KFunction
 
 /**
  * Property Annotation for [FloatRangeRule]

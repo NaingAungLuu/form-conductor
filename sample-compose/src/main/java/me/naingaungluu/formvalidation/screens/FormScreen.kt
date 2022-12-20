@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -18,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import me.naingaungluu.formconductor.FormResult
 import me.naingaungluu.formconductor.annotations.EmailAddress
 import me.naingaungluu.formconductor.annotations.Form
 import me.naingaungluu.formconductor.annotations.IntegerRange
@@ -124,9 +129,21 @@ fun FormScreen() {
                     Text("Female")
                 }
             }
+
             when (val form = formState.value) {
-                is me.naingaungluu.formconductor.FormResult.Success -> SignUpFormDataLayout(form.data)
+                is FormResult.Success -> SignUpFormDataLayout(form.data)
                 else -> Text("Invalid Form Input")
+            }
+            LaunchedEffect(this) {
+                delay(5000)
+                this@form.submit(
+                    SignUpFormData(
+                        name = "Harry",
+                        age = 20,
+                        emailAddress = "naingaunglu01@gmail.com",
+                        gender = Gender.Female
+                    )
+                )
             }
         }
     }

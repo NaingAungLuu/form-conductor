@@ -1,9 +1,20 @@
 ---
-title: Documentation
+title: Home
 description: A declarative form validation library for Kotlin.
 icon: material/newspaper
 ---
-# 📜 Form Conductor
+
+<!-- <p align="center" size="200px">
+  <img src="assets/logo.png" />
+</p> -->
+
+<!-- <div style="text-align:center"><img width="20%" src="assets/logo.png"/><br/><br/><br/></div>
+
+![Image](assets/logo.png "Form Conductor") -->
+
+<img src="assets/logo_transparent.png" alt="alt text" width="150"/>
+
+# Form Conductor
 A declarative form validation library for Kotlin.
 
 Form conductor is more than form validation. It provides a handful of reusable API to construct a form in simple easy steps.
@@ -15,11 +26,12 @@ Form conductor tries to tackle three aspects of forms:
 <br/>
 
 ![JitPack](https://img.shields.io/jitpack/version/com.github.NaingAungLuu/form-conductor?style=for-the-badge)
-![GitHub](https://img.shields.io/github/license/NaingAungLuu/form-conductor?style=for-the-badge)
+![Codecov](https://img.shields.io/codecov/c/github/NaingAungLuu/form-conductor?style=for-the-badge&token=KC7CK5DOZZ)
 ![GitHub issues](https://img.shields.io/github/issues/NaingAungLuu/form-conductor?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/NaingAungLuu/form-conductor?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/NaingAungLuu/form-conductor?style=for-the-badge)
 
-## Table of contents
+<!-- ## Table of contents
 
 - [📜 Form Conductor](#-form-conductor)
   - [Table of contents](#table-of-contents)
@@ -36,7 +48,7 @@ Form conductor tries to tackle three aspects of forms:
       - [Modular dependency](#modular-dependency)
       - [Available Modules](#available-modules)
 
-<br/>
+<br/> -->
 
 ## 🔨 Form construction using built-in annotations
 
@@ -326,41 +338,3 @@ data class FormData(
     val date: LocalDate
 )
 ```
-
-## Installation
-
-#### Single dependency (imports all the modules as a single dependency)
-```groovy
-// Groovy
-dependencies {
-    implementation "com.github.NaingAungLuu:form-conductor:0.2.0"
-}
-
-// Kts
-dependencies {
-    implementation("com.github.NaingAungLuu:form-conductor:0.2.0")
-}
-```
-
-
-#### Modular dependency
-```groovy
-// Groovy
-dependencies {
-    implementation "com.github.NaingAungLuu.form-conductor:core:0.2.0"
-    implementation "com.github.NaingAungLuu.form-conductor:compose-ui:0.2.0"
-}
-
-// Kts
-dependencies {
-    implementation("com.github.NaingAungLuu.form-conductor:core:0.2.0")
-    implementation("com.github.NaingAungLuu.form-conductor:compose-ui:0.2.0")
-}
-```
-
-#### Available Modules
-
-`form-conductor:core` - Pure Kotlin library with all form validation features<br>
-`form-conductor:compose-ui` - Android library with `form` and `field` composables with scopes for easy form state handling
-
-

@@ -17,7 +17,7 @@ import kotlin.reflect.KProperty1
 internal class FormFieldImpl<T : Any, V : Any>(
     private val fieldClass: KProperty1<T, V>,
     private val validators: Set<FieldValidator<V, *>> = emptySet(),
-    private val isOptional: Boolean = false
+    override val isOptional: Boolean = false
 ) : FormField<V> {
 
     override val fieldName: String = fieldClass.name
@@ -40,7 +40,9 @@ internal class FormFieldImpl<T : Any, V : Any>(
      */
     override fun setField(input: V?) {
         valueStream.value = valueStream.value.copy(value = input)
-        if (input != null) {
+
+        // Null and empty strings are skipped for validation
+        if (input != null && input != "") {
             resultStream.value = validate(input)
         } else {
             resultStream.value = if (isOptional) {

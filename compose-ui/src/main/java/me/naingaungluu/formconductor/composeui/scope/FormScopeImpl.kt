@@ -20,4 +20,12 @@ internal class FormScopeImpl<T : Any>(
     override val formState: State<FormResult<T>>
         @Composable
         get() = form.formDataStream.collectAsState(FormResult.NoInput)
+
+    override fun validate(): FormResult<T> {
+        return form.validate()
+    }
+
+    override fun submit(payload: T): FormResult<T> {
+        return form.submit(payload)
+    }
 }

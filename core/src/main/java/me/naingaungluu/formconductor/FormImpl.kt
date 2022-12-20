@@ -3,7 +3,9 @@ package me.naingaungluu.formconductor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import me.naingaungluu.formconductor.annotations.FieldValidation
+import me.naingaungluu.formconductor.annotations.Optional
 import me.naingaungluu.formconductor.syntax.AnnotationSyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxResult
@@ -43,7 +45,7 @@ class FormImpl<T : Any>(
 
     init {
         // Check requirements for form class
-        require(constructorRequirementSatisfied(formClass))
+        checkMetadataRequirements(formClass)
 
         // Fetch field list from class reference
         val fields = formClass.memberProperties.toSet()
@@ -63,27 +65,9 @@ class FormImpl<T : Any>(
         // Observe a list of upstream flows from each of the [FormField] object
         formDataStream = combine(
             fieldMap.values.map { it.valueStream.asSharedFlow() }
-        ) { _ ->
-
-            /*
-                Fetch field results (Note: We allow FieldResult.NoInput as successful validation)
-             */
-            val resultStreams = fieldMap.values.map { it.resultStream.value }
-            val formSuccess = resultStreams.all {
-                it is FieldResult.Success || it is FieldResult.NoInput
-            }
-
-            if (formSuccess) {
-                val formData = constructFormData()
-                FormResult.Success(formData)
-            } else {
-                // Fetch failed rules in case of error
-                val failedRules = resultStreams
-                    .filterIsInstance<FieldResult.Error>()
-                    .map { it.failedRule }
-
-                FormResult.Error(failedRules.toSet())
-            }
+        ) {
+            /* Fetch field results (Note: We allow FieldResult.NoInput as successful validation) */
+            validate()
         }
     }
 
@@ -131,8 +115,8 @@ class FormImpl<T : Any>(
      * @param formDataClass kotlin class reference of form data
      * @return
      */
-    private fun constructorRequirementSatisfied(formDataClass: KClass<T>): Boolean {
-        val primaryConstructor = formClass.primaryConstructor
+    private fun checkMetadataRequirements(formDataClass: KClass<T>) {
+        val primaryConstructor = formClass.constructors.firstOrNull()
 
         val hasPrimaryConstructor = (primaryConstructor != null)
 
@@ -144,18 +128,26 @@ class FormImpl<T : Any>(
         // Member properties shouldn't be mutable since validated form data must not be mutated
         val hasMutableProperties = formDataClass.memberProperties.any { it is KMutableProperty<*> }
 
-        return hasPrimaryConstructor && hasDefaultConstructorParameters && !hasMutableProperties
-    }
-
-    private fun <V : Any?> syntaxRequirementSatisfied(field: KProperty1<T, V>): Boolean {
-        val fieldValidationAnnotations = field.annotations.filter {
-            it.annotationClass.hasAnnotation<FieldValidation<*>>()
+        require(hasPrimaryConstructor) {
+            "Form data class '${formDataClass.simpleName}' needs to have a primary constructor"
         }
-        return fieldValidationAnnotations.all {
-            val validationAnnotation = it.annotationClass.findAnnotation<FieldValidation<*>>()
-            val allowedTypeName = validationAnnotation?.fieldType?.jvmName
-            val receivedTypeName = field.javaField?.type?.name
-            allowedTypeName == receivedTypeName
+
+        require(hasDefaultConstructorParameters) {
+            val nonOptionalParameters = primaryConstructor!!.parameters.filter { !it.isOptional }
+            """
+                Form data class '${formDataClass.simpleName}' needs to have a default constructor parameters.
+                Following parameters need to have a default value in the constructor:
+                ${nonOptionalParameters.map { it.name }}
+            """.trimIndent()
+        }
+
+        require(!hasMutableProperties) {
+            val mutableProperties = formDataClass.memberProperties.filter { it is KMutableProperty<*> }
+            """
+                Form data class '${formDataClass.simpleName}' cannot have mutable properties (var).
+                Following properties need to be immutable (val):
+                ${mutableProperties.map { it.name }}
+            """.trimIndent()
         }
     }
 
@@ -170,6 +162,7 @@ class FormImpl<T : Any>(
         val fieldAnnotations = field.annotations.filter {
             it.annotationClass.hasAnnotation<FieldValidation<*>>()
         }
+        val isFieldOptional = field.hasAnnotation<Optional>()
         val validators = fieldAnnotations.map {
             val validationAnnotation = it.annotationClass.findAnnotation<FieldValidation<*>>()
             // Fetches the [ValidationRule] object from the annotation
@@ -183,7 +176,8 @@ class FormImpl<T : Any>(
 
         return FormFieldImpl(
             fieldClass = field as KProperty1<T, Any>,
-            validators = validators
+            validators = validators,
+            isOptional = isFieldOptional
         )
     }
 
@@ -212,5 +206,50 @@ class FormImpl<T : Any>(
             }
 
         return constructor.callBy(argumentMap)
+    }
+
+    override fun submit(payload: T): FormResult<T> {
+        formClass.memberProperties.map {
+            it.get(payload)?.let { value ->
+                setField(it as KProperty1<T, Any>, value)
+            }
+        }
+        return validate()
+    }
+
+    override fun validate(): FormResult<T> {
+        val mandatoryFields = fieldMap.values.filterNot { it.isOptional }
+
+        val optionalFields = fieldMap.values.filter { it.isOptional }
+            .map { it.resultStream.value }
+
+        val shouldSkipValidation = mandatoryFields.all { it.resultStream.value is FieldResult.NoInput }
+
+        if (shouldSkipValidation) {
+            return FormResult.NoInput
+        }
+
+        val mandatoryFieldsValidated = mandatoryFields
+            .map { it.resultStream.value }
+            .all { it is FieldResult.Success }
+
+        val optionalFieldsValidated = fieldMap.filter { it.value.isOptional }
+            .map { it.value.resultStream.value }
+            .none { it is FieldResult.Error }
+
+        val formSuccess = mandatoryFieldsValidated && optionalFieldsValidated
+
+        return if (formSuccess) {
+            val formData = constructFormData()
+            FormResult.Success(formData)
+        } else {
+            // Fetch failed rules in case of error
+            val failedRules = fieldMap.values
+                .map { it.resultStream.value }
+                .filterIsInstance<FieldResult.Error>()
+                .map { it.failedRule }
+
+            FormResult.Error(failedRules.toSet())
+        }
     }
 }

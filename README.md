@@ -9,6 +9,12 @@ Form conductor tries to tackle three aspects of forms:
 
 <br/>
 
+## Under active development 🏗️
+
+The library is under active development and APIs are prone to change during the phase. Updates are going to be prompted in the release notes!
+
+<br/>
+
 ![JitPack](https://img.shields.io/jitpack/version/com.github.NaingAungLuu/form-conductor?style=for-the-badge)
 ![Codecov](https://img.shields.io/codecov/c/github/NaingAungLuu/form-conductor?style=for-the-badge&token=KC7CK5DOZZ)
 ![GitHub issues](https://img.shields.io/github/issues/NaingAungLuu/form-conductor?style=for-the-badge)

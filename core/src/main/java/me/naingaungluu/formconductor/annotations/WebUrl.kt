@@ -19,7 +19,7 @@ import me.naingaungluu.formconductor.validation.rules.WebUrlRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<String>(
+@FieldValidation(
     fieldType = String::class,
     validator = WebUrlRule::class
 )

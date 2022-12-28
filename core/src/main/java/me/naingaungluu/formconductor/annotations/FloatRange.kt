@@ -1,6 +1,7 @@
 package me.naingaungluu.formconductor.annotations
 
 import me.naingaungluu.formconductor.validation.rules.FloatRangeRule
+import kotlin.reflect.KFunction
 
 /**
  * Property Annotation for [FloatRangeRule]
@@ -19,7 +20,7 @@ import me.naingaungluu.formconductor.validation.rules.FloatRangeRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<Float>(
+@FieldValidation(
     fieldType = Float::class,
     validator = FloatRangeRule::class
 )

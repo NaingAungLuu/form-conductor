@@ -30,7 +30,7 @@ theme:
   icon:
     repo: fontawesome/brands/github
   
-  logo: assets/scroll.png
+  logo: assets/logo_mono_transparent.png
 
 nav:
   - Home:

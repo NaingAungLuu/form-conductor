@@ -20,7 +20,7 @@ import me.naingaungluu.formconductor.validation.rules.IntegerRangeRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<Int>(
+@FieldValidation(
     fieldType = Int::class,
     validator = IntegerRangeRule::class
 )

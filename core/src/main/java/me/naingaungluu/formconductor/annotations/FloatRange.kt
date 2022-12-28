@@ -20,7 +20,7 @@ import kotlin.reflect.KFunction
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<Float>(
+@FieldValidation(
     fieldType = Float::class,
     validator = FloatRangeRule::class
 )

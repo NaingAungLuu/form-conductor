@@ -21,7 +21,7 @@ sealed class FieldResult {
      */
     data class Error(
         val message: String,
-        val failedRule: ValidationRule<*, *>
+        val failedRule: ValidationRule
     ) : FieldResult()
 
     /**

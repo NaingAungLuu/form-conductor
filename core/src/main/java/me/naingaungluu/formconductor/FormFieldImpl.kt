@@ -1,7 +1,8 @@
 package me.naingaungluu.formconductor
 
 import kotlinx.coroutines.flow.MutableStateFlow
-import me.naingaungluu.formconductor.validation.FieldValidator
+import me.naingaungluu.formconductor.validation.validators.FieldValidator
+import me.naingaungluu.formconductor.validation.validators.StatelessFieldValidator
 import me.naingaungluu.formconductor.validation.rules.OptionalRule
 import kotlin.reflect.KProperty1
 
@@ -11,12 +12,12 @@ import kotlin.reflect.KProperty1
  * @param T Receiver type or the Form Data class.
  * @param V Type of the field
  * @property fieldClass kotlin property reference to the associated property of the field
- * @property validators a set of [FieldValidator] objects associated with the field
+ * @property validators a set of [StatelessFieldValidator] objects associated with the field
  * @property isOptional flags the field as optional
  */
 internal class FormFieldImpl<T : Any, V : Any>(
     private val fieldClass: KProperty1<T, V>,
-    private val validators: Set<FieldValidator<V, *>> = emptySet(),
+    private val validators: Set<FieldValidator<V>> = emptySet(),
     override val isOptional: Boolean = false
 ) : FormField<V> {
 

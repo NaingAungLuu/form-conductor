@@ -1,9 +1,8 @@
 package me.naingaungluu.formconductor.validation.rules
 
 import me.naingaungluu.formconductor.FieldResult
-import me.naingaungluu.formconductor.annotations.IsChecked
 import me.naingaungluu.formconductor.annotations.MaxLength
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.StatelessValidationRule
 
 /**
  * Validation Rule for String Lengths
@@ -17,7 +16,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * @author Naing Aung Luu
  * @since 0.0.1
  */
-object MaxLengthRule : ValidationRule<String, MaxLength> {
+object MaxLengthRule : StatelessValidationRule<String, MaxLength> {
 
     /**
      * Validates the field using the options passed to [MaxLength] annotation

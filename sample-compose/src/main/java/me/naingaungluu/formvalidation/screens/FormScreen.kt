@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -13,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -70,7 +68,9 @@ fun FormScreen() {
                 TextField(
                     value = state.value?.value.orEmpty(),
                     onValueChange = { setField(it.ifEmpty { null }) },
-                    modifier = Modifier.padding(horizontal = 20.dp).padding(top = 20.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .padding(top = 20.dp),
                     label = { Text("Name") },
                     isError = resultState.value is me.naingaungluu.formconductor.FieldResult.Error
                 )
@@ -114,7 +114,10 @@ fun FormScreen() {
                 }
             }
             field(SignUpFormData::gender) {
-                Row(Modifier.padding(20.dp).selectableGroup()) {
+                Row(
+                    Modifier
+                        .padding(20.dp)
+                        .selectableGroup()) {
                     RadioButton(
                         selected = state.value?.value == Gender.Male,
                         onClick = { setField(Gender.Male) },

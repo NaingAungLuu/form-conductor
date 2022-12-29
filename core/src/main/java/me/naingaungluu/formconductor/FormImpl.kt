@@ -1,21 +1,19 @@
 package me.naingaungluu.formconductor
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.*
 import me.naingaungluu.formconductor.annotations.FieldValidation
 import me.naingaungluu.formconductor.annotations.Optional
 import me.naingaungluu.formconductor.syntax.AnnotationSyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxResult
 import me.naingaungluu.formconductor.syntax.getErrorMessage
-import me.naingaungluu.formconductor.validation.FieldValidator
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.*
+import me.naingaungluu.formconductor.validation.validators.FieldValidator
+import me.naingaungluu.formconductor.validation.validators.StateBasedFieldValidator
+import me.naingaungluu.formconductor.validation.validators.StatelessFieldValidator
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KParameter
-import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
@@ -29,7 +27,7 @@ import kotlin.reflect.full.memberProperties
  */
 class FormImpl<T : Any>(
     private val formClass: KClass<T>
-) : Form<T> {
+) : Form<T>, CollectableFormData<T> {
 
     /**
      * Stores a map of fields to it's [FormField] objects
@@ -158,19 +156,10 @@ class FormImpl<T : Any>(
     private fun initializeField(field: KProperty1<T, *>): FormField<Any> {
         // Fetches all the fields annotated with a valid [FieldValidation]
         val fieldAnnotations = field.annotations.filter {
-            it.annotationClass.hasAnnotation<FieldValidation<*>>()
+            it.annotationClass.hasAnnotation<FieldValidation>()
         }
         val isFieldOptional = field.hasAnnotation<Optional>()
-        val validators = fieldAnnotations.map {
-            val validationAnnotation = it.annotationClass.findAnnotation<FieldValidation<*>>()
-            // Fetches the [ValidationRule] object from the annotation
-            val validationRule = validationAnnotation?.validator?.objectInstance as ValidationRule<Any, Annotation>
-            // FieldValidator with options
-            FieldValidator(
-                validationRule = validationRule,
-                options = it
-            )
-        }.toSet()
+        val validators = fieldAnnotations.map(::getFieldValidator).toSet()
 
         return FormFieldImpl(
             fieldClass = field as KProperty1<T, Any>,
@@ -249,4 +238,33 @@ class FormImpl<T : Any>(
             FormResult.Error(failedRules.toSet())
         }
     }
+
+    private fun getFieldValidator(annotation: Annotation): FieldValidator<Any> {
+        val fieldValidatorAnnotation = annotation.annotationClass.findAnnotation<FieldValidation>()
+        return when (
+            val validationRule = fieldValidatorAnnotation?.validator?.objectInstance
+        ) {
+            is StatelessValidationRule<*, *> ->
+                StatelessFieldValidator(
+                    validationRule = validationRule as StatelessValidationRule<Any, Annotation>,
+                    options = annotation
+                )
+            is StateBasedValidationRule<*,*,*> ->
+                StateBasedFieldValidator(
+                    validationRule = validationRule as StateBasedValidationRule<Any, Annotation, T>,
+                    options = annotation,
+                    form = this
+                )
+            else -> {
+                throw IllegalArgumentException(
+                    """
+                        |Incompatible Validation Rule type ${fieldValidatorAnnotation?.validator?.simpleName} is provided
+                        |for annotation ${annotation.annotationClass.simpleName}
+                    """.trimMargin()
+                )
+            }
+        }
+    }
+
+    override fun collectFormData(): T = constructFormData()
 }

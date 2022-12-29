@@ -3,7 +3,7 @@ package me.naingaungluu.formconductor.validation.rules
 import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.FloatRange
 import me.naingaungluu.formconductor.annotations.IntegerRange
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.StatelessValidationRule
 
 /**
  * Validation Rule for Ranged Integer Values
@@ -15,7 +15,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * @author Naing Aung Luu
  * @since 0.0.1
  */
-object IntegerRangeRule : ValidationRule<Int, IntegerRange> {
+object IntegerRangeRule : StatelessValidationRule<Int, IntegerRange> {
 
     /**
      * Validates the field using the options passed to the [FloatRange] annotation

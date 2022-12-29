@@ -1,5 +1,6 @@
 package me.naingaungluu.formconductor
 
+import me.naingaungluu.formconductor.validation.StatelessValidationRule
 import me.naingaungluu.formconductor.validation.ValidationRule
 
 /**
@@ -25,7 +26,7 @@ sealed class FormResult<out T : Any> {
      * @property failedRules contains a set of failed validation rules with error messages
      */
     data class Error(
-        val failedRules: Set<ValidationRule<*, *>>
+        val failedRules: Set<ValidationRule>
     ) : FormResult<Nothing>()
 
     /**

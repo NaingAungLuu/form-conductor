@@ -2,7 +2,7 @@ package me.naingaungluu.formconductor.validation.rules
 
 import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.Optional
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.StatelessValidationRule
 
 /**
  * Validation Rule for Optional Fields
@@ -14,7 +14,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * @author Naing Aung Luu
  * @since 0.0.1
  */
-object OptionalRule : ValidationRule<Any?, Optional> {
+object OptionalRule : StatelessValidationRule<Any?, Optional> {
     // Nothing much here
     override fun validate(value: Any?, options: Optional): FieldResult {
         return FieldResult.Success

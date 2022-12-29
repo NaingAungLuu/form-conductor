@@ -2,7 +2,7 @@ package me.naingaungluu.formconductor.validation.rules
 
 import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.IsChecked
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.StatelessValidationRule
 
 /**
  * Validation Rule for Checkboxes
@@ -14,7 +14,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * @author Naing Aung Luu
  * @since 0.0.1
  */
-object IsCheckedRule : ValidationRule<Boolean, IsChecked> {
+object IsCheckedRule : StatelessValidationRule<Boolean, IsChecked> {
 
     /**
      * Validates the field if it's checked

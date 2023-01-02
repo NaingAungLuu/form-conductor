@@ -1,6 +1,5 @@
 package me.naingaungluu.formconductor.annotations
 
-import me.naingaungluu.formconductor.validation.StatelessValidationRule
 import me.naingaungluu.formconductor.validation.ValidationRule
 import kotlin.reflect.KClass
 

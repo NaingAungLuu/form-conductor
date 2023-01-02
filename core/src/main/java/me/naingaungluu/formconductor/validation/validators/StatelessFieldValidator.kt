@@ -1,7 +1,7 @@
 package me.naingaungluu.formconductor.validation.validators
 
 import me.naingaungluu.formconductor.FieldResult
-import me.naingaungluu.formconductor.validation.StatelessValidationRule
+import me.naingaungluu.formconductor.validation.rules.StatelessValidationRule
 
 /**
  * A wrapper class or proxy that passes the annotation object as options to the validation rule
@@ -18,7 +18,7 @@ import me.naingaungluu.formconductor.validation.StatelessValidationRule
 internal class StatelessFieldValidator<V : Any?, A : Annotation>(
     private val validationRule: StatelessValidationRule<V, A>,
     private val options: A
-) : FieldValidator<V>() {
+) : FieldValidator<V> {
     /**
      * Validates the field using just it's value, since the option is known
      *

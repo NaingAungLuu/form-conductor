@@ -1,6 +1,5 @@
 package me.naingaungluu.formconductor
 
-import me.naingaungluu.formconductor.validation.StatelessValidationRule
 import me.naingaungluu.formconductor.validation.ValidationRule
 
 /**

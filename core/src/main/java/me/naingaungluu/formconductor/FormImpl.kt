@@ -3,6 +3,7 @@ package me.naingaungluu.formconductor
 import kotlinx.coroutines.flow.*
 import me.naingaungluu.formconductor.annotations.FieldValidation
 import me.naingaungluu.formconductor.annotations.Optional
+import me.naingaungluu.formconductor.builder.FormFieldFactory
 import me.naingaungluu.formconductor.syntax.AnnotationSyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxResult
@@ -56,7 +57,8 @@ class FormImpl<T : Any>(
         }
 
         // Assign each field a [FormField] object
-        fieldMap = fields.associateWith { initializeField(it) }
+        val formFieldFactory = FormFieldFactory(this)
+        fieldMap = fields.associateWith(formFieldFactory::create)
 
         // Observe a list of upstream flows from each of the [FormField] object
         formDataStream = combine(
@@ -148,27 +150,6 @@ class FormImpl<T : Any>(
     }
 
     /**
-     * A factory method that receives the property reference and constructs [FormField] object
-     *
-     * @param field kotlin property reference to the field
-     * @return [FormField] instance ready to operate with
-     */
-    private fun initializeField(field: KProperty1<T, *>): FormField<Any> {
-        // Fetches all the fields annotated with a valid [FieldValidation]
-        val fieldAnnotations = field.annotations.filter {
-            it.annotationClass.hasAnnotation<FieldValidation>()
-        }
-        val isFieldOptional = field.hasAnnotation<Optional>()
-        val validators = fieldAnnotations.map(::getFieldValidator).toSet()
-
-        return FormFieldImpl(
-            fieldClass = field as KProperty1<T, Any>,
-            validators = validators,
-            isOptional = isFieldOptional
-        )
-    }
-
-    /**
      * Builds the form data using it's primary constructor
      *
      * **REQUIREMENT**: We need the primary constructor to have default parameter values
@@ -205,9 +186,9 @@ class FormImpl<T : Any>(
     }
 
     override fun validate(): FormResult<T> {
-        val mandatoryFields = fieldMap.values.filterNot { it.isOptional }
+        val mandatoryFields = fieldMap.values.filterNot { it.isFieldOptional() }
 
-        val optionalFields = fieldMap.values.filter { it.isOptional }
+        val optionalFields = fieldMap.values.filter { it.isFieldOptional() }
             .map { it.resultStream.value }
 
         val shouldSkipValidation = mandatoryFields.all { it.resultStream.value is FieldResult.NoInput }
@@ -236,33 +217,6 @@ class FormImpl<T : Any>(
                 .map { it.failedRule }
 
             FormResult.Error(failedRules.toSet())
-        }
-    }
-
-    private fun getFieldValidator(annotation: Annotation): FieldValidator<Any> {
-        val fieldValidatorAnnotation = annotation.annotationClass.findAnnotation<FieldValidation>()
-        return when (
-            val validationRule = fieldValidatorAnnotation?.validator?.objectInstance
-        ) {
-            is StatelessValidationRule<*, *> ->
-                StatelessFieldValidator(
-                    validationRule = validationRule as StatelessValidationRule<Any, Annotation>,
-                    options = annotation
-                )
-            is StateBasedValidationRule<*,*,*> ->
-                StateBasedFieldValidator(
-                    validationRule = validationRule as StateBasedValidationRule<Any, Annotation, T>,
-                    options = annotation,
-                    form = this
-                )
-            else -> {
-                throw IllegalArgumentException(
-                    """
-                        |Incompatible Validation Rule type ${fieldValidatorAnnotation?.validator?.simpleName} is provided
-                        |for annotation ${annotation.annotationClass.simpleName}
-                    """.trimMargin()
-                )
-            }
         }
     }
 

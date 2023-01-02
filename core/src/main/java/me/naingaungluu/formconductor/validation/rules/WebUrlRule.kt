@@ -4,7 +4,6 @@ import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.MaxLength
 import me.naingaungluu.formconductor.annotations.MinLength
 import me.naingaungluu.formconductor.annotations.WebUrl
-import me.naingaungluu.formconductor.validation.StatelessValidationRule
 
 /**
  * Validation Rule for String Lengths

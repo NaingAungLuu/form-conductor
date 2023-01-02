@@ -2,7 +2,6 @@ package me.naingaungluu.formconductor.validation.rules
 
 import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.IsChecked
-import me.naingaungluu.formconductor.validation.StatelessValidationRule
 
 /**
  * Validation Rule for Checkboxes

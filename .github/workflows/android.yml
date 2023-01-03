@@ -25,16 +25,16 @@ jobs:
         distribution: 'temurin'
         cache: gradle
         
-    - run: 'echo "$SIGNING_KEY_ID" > SIGNING_KEY_ID'
+    - run: 'echo $SIGNING_KEY_ID'
       shell: bash
     
-    - run: 'echo "$SIGNING_PASSWORD" > SIGNING_PASSWORD'
+    - run: 'echo $SIGNING_PASSWORD'
       shell: bash
     
-    - run: 'echo "$SONATYPE_NEXUS_USERNAME" > SONATYPE_NEXUS_USERNAME'
+    - run: 'echo $SONATYPE_NEXUS_USERNAME'
       shell: bash
       
-    - run: 'echo "$SONATYPE_NEXUS_PASSWORD" > SONATYPE_NEXUS_PASSWORD'
+    - run: 'echo $SONATYPE_NEXUS_PASSWORD'
       shell: bash
       
     - name: Grant execute permission for gradlew

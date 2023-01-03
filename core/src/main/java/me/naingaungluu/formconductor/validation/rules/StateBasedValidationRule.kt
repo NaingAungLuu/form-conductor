@@ -1,4 +1,4 @@
-package me.naingaungluu.formconductor.validation
+package me.naingaungluu.formconductor.validation.rules
 
 import me.naingaungluu.formconductor.FieldResult
 

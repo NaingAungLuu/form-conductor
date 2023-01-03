@@ -2,7 +2,7 @@ package me.naingaungluu.formconductor.validation.validators
 
 import me.naingaungluu.formconductor.CollectableFormData
 import me.naingaungluu.formconductor.FieldResult
-import me.naingaungluu.formconductor.validation.StateBasedValidationRule
+import me.naingaungluu.formconductor.validation.rules.StateBasedValidationRule
 
 /**
  * This is a wrapper class for a [StateBasedValidationRule] instance.
@@ -21,7 +21,7 @@ internal class StateBasedFieldValidator<T: Any, V: Any?, A: Annotation>(
     private val form: CollectableFormData<T>,
     private val validationRule: StateBasedValidationRule<V, A, T>,
     private val options: A
-) : FieldValidator<V>() {
+) : FieldValidator<V> {
     override fun validate(input: V): FieldResult {
         return validationRule.validate(input, options, form.collectFormData())
     }

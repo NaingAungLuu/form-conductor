@@ -1,7 +1,6 @@
 package me.naingaungluu.formconductor
 
-import me.naingaungluu.formconductor.validation.StatelessValidationRule
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.rules.ValidationRule
 
 /**
  * Form result object with multiple states

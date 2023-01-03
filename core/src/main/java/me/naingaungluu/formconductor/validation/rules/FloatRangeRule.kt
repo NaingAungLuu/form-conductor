@@ -2,7 +2,6 @@ package me.naingaungluu.formconductor.validation.rules
 
 import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.FloatRange
-import me.naingaungluu.formconductor.validation.ValidationRule
 
 /**
  * Validation Rule for Ranged Float Values
@@ -14,7 +13,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * @author Naing Aung Luu
  * @since 0.0.1
  */
-object FloatRangeRule : ValidationRule<Float, FloatRange> {
+object FloatRangeRule : StatelessValidationRule<Float, FloatRange> {
 
     /**
      * Validates the field using the options passed to the [FloatRange] annotation

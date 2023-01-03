@@ -18,7 +18,7 @@ import me.naingaungluu.formconductor.validation.rules.MaxLengthRule
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@FieldValidation<String>(
+@FieldValidation(
     fieldType = String::class,
     validator = MaxLengthRule::class
 )

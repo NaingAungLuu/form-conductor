@@ -4,7 +4,6 @@ import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.MaxLength
 import me.naingaungluu.formconductor.annotations.MinLength
 import me.naingaungluu.formconductor.annotations.WebUrl
-import me.naingaungluu.formconductor.validation.ValidationRule
 
 /**
  * Validation Rule for String Lengths
@@ -17,7 +16,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * @author Naing Aung Luu
  * @since 0.0.1
  */
-object WebUrlRule : ValidationRule<String, WebUrl> {
+object WebUrlRule : StatelessValidationRule<String, WebUrl> {
 
     /**
      * Custom baked url pattern without a scheme prefix, "https" or "http"

@@ -1,15 +1,16 @@
-package me.naingaungluu.formconductor.validation
+package me.naingaungluu.formconductor.validation.rules
 
 import me.naingaungluu.formconductor.FieldResult
 
 /**
- * Validation Rule interface
+ * Stateless Validation Rule interface
  *
  * You can implement this interface to create custom validation rules
+ * that doesn't depend on form state
  *
  * @param T Type of value
  * @param A Type of associated annotation class
  */
-interface ValidationRule<T : Any?, A : Annotation> {
+interface StatelessValidationRule<T : Any?, A : Annotation>: ValidationRule {
     fun validate(value: T, options: A): FieldResult
 }

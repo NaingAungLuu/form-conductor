@@ -1,17 +1,17 @@
 package me.naingaungluu.formconductor
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.*
 import me.naingaungluu.formconductor.annotations.FieldValidation
 import me.naingaungluu.formconductor.annotations.Optional
+import me.naingaungluu.formconductor.builder.FormFieldFactory
 import me.naingaungluu.formconductor.syntax.AnnotationSyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxProcessor
 import me.naingaungluu.formconductor.syntax.SyntaxResult
 import me.naingaungluu.formconductor.syntax.getErrorMessage
-import me.naingaungluu.formconductor.validation.FieldValidator
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.*
+import me.naingaungluu.formconductor.validation.validators.FieldValidator
+import me.naingaungluu.formconductor.validation.validators.StateBasedFieldValidator
+import me.naingaungluu.formconductor.validation.validators.StatelessFieldValidator
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KParameter
@@ -19,9 +19,6 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.jvm.javaField
-import kotlin.reflect.jvm.jvmName
 
 /**
  * An implementation of the [Form] interface
@@ -31,7 +28,7 @@ import kotlin.reflect.jvm.jvmName
  */
 class FormImpl<T : Any>(
     private val formClass: KClass<T>
-) : Form<T> {
+) : Form<T>, CollectableFormData<T> {
 
     /**
      * Stores a map of fields to it's [FormField] objects
@@ -60,7 +57,8 @@ class FormImpl<T : Any>(
         }
 
         // Assign each field a [FormField] object
-        fieldMap = fields.associateWith { initializeField(it) }
+        val formFieldFactory = FormFieldFactory(this)
+        fieldMap = fields.associateWith(formFieldFactory::create)
 
         // Observe a list of upstream flows from each of the [FormField] object
         formDataStream = combine(
@@ -152,36 +150,6 @@ class FormImpl<T : Any>(
     }
 
     /**
-     * A factory method that receives the property reference and constructs [FormField] object
-     *
-     * @param field kotlin property reference to the field
-     * @return [FormField] instance ready to operate with
-     */
-    private fun initializeField(field: KProperty1<T, *>): FormField<Any> {
-        // Fetches all the fields annotated with a valid [FieldValidation]
-        val fieldAnnotations = field.annotations.filter {
-            it.annotationClass.hasAnnotation<FieldValidation<*>>()
-        }
-        val isFieldOptional = field.hasAnnotation<Optional>()
-        val validators = fieldAnnotations.map {
-            val validationAnnotation = it.annotationClass.findAnnotation<FieldValidation<*>>()
-            // Fetches the [ValidationRule] object from the annotation
-            val validationRule = validationAnnotation?.validator?.objectInstance as ValidationRule<Any, Annotation>
-            // FieldValidator with options
-            FieldValidator(
-                validationRule = validationRule,
-                options = it
-            )
-        }.toSet()
-
-        return FormFieldImpl(
-            fieldClass = field as KProperty1<T, Any>,
-            validators = validators,
-            isOptional = isFieldOptional
-        )
-    }
-
-    /**
      * Builds the form data using it's primary constructor
      *
      * **REQUIREMENT**: We need the primary constructor to have default parameter values
@@ -210,17 +178,17 @@ class FormImpl<T : Any>(
 
     override fun submit(payload: T): FormResult<T> {
         formClass.memberProperties.map {
-            it.get(payload)?.let { value ->
-                setField(it as KProperty1<T, Any>, value)
-            }
+            it to it.getValue(payload, it)
+        }.forEach { (property, value) ->
+            setField(property as KProperty1<T, Any>, value as Any)
         }
         return validate()
     }
 
     override fun validate(): FormResult<T> {
-        val mandatoryFields = fieldMap.values.filterNot { it.isOptional }
+        val mandatoryFields = fieldMap.values.filterNot { it.isFieldOptional() }
 
-        val optionalFields = fieldMap.values.filter { it.isOptional }
+        val optionalFields = fieldMap.values.filter { it.isFieldOptional() }
             .map { it.resultStream.value }
 
         val shouldSkipValidation = mandatoryFields.all { it.resultStream.value is FieldResult.NoInput }
@@ -233,8 +201,7 @@ class FormImpl<T : Any>(
             .map { it.resultStream.value }
             .all { it is FieldResult.Success }
 
-        val optionalFieldsValidated = fieldMap.filter { it.value.isOptional }
-            .map { it.value.resultStream.value }
+        val optionalFieldsValidated = optionalFields
             .none { it is FieldResult.Error }
 
         val formSuccess = mandatoryFieldsValidated && optionalFieldsValidated
@@ -252,4 +219,6 @@ class FormImpl<T : Any>(
             FormResult.Error(failedRules.toSet())
         }
     }
+
+    override fun collectFormData(): T = constructFormData()
 }

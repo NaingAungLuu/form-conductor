@@ -1,6 +1,6 @@
 package me.naingaungluu.formconductor
 
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.rules.ValidationRule
 
 /**
  * Returns after a field validation as a result

@@ -1,4 +1,4 @@
-name: Android CI
+name: Android Build
 
 on:
   push:
@@ -24,12 +24,15 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
+        
+    - run: 'echo "$SIGNING_KEY_ID" > SIGNING_KEY_ID, "$SIGNING_PASSWORD" > SIGNING_PASSWORD , "$SONATYPE_NEXUS_USERNAME" > SONATYPE_NEXUS_USERNAME , "$SONATYPE_NEXUS_PASSWORD" > SONATYPE_NEXUS_PASSWORD"'
+      shell: bash
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     
     - name: Build with Gradle
-      run: ./gradlew check koverVerify
+      run: ./gradlew check koverVerify publishReleasePublicationToMavenCentralRepository
 
     - name: Upload coverage reports to Codecov with GitHub Action
       uses: codecov/codecov-action@v3

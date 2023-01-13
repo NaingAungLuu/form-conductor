@@ -2,17 +2,18 @@
 title: Home
 description: A declarative form validation library for Kotlin.
 icon: material/newspaper
+sidebar_position: 1
 ---
+import Admonition from '@theme/Admonition';
+import logoTransparentUrl from './../assets/logo_transparent.png';
 
-<!-- <p align="center" size="200px">
-  <img src="assets/logo.png" />
-</p> -->
+<img
+  src={require('./../assets/logo_transparent.png').default}
+  alt="Example banner"
+  width="150"
+/>
 
-<!-- <div style="text-align:center"><img width="20%" src="assets/logo.png"/><br/><br/><br/></div>
-
-![Image](assets/logo.png "Form Conductor") -->
-
-<img src="assets/logo_transparent.png" alt="alt text" width="150"/>
+<br/><br/>
 
 # Form Conductor
 A declarative form validation library for Kotlin.
@@ -23,37 +24,25 @@ Form conductor tries to tackle three aspects of forms:
 - `Form State Management` 
 - `Form Validation`
 
-<br/>
 
-![JitPack](https://img.shields.io/jitpack/version/com.github.NaingAungLuu/form-conductor?style=for-the-badge)
+![Maven Central](https://img.shields.io/maven-central/v/me.naingaungluu.formconductor/core?color=green&style=for-the-badge)
 ![Codecov](https://img.shields.io/codecov/c/github/NaingAungLuu/form-conductor?style=for-the-badge&token=KC7CK5DOZZ)
 ![GitHub issues](https://img.shields.io/github/issues/NaingAungLuu/form-conductor?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/NaingAungLuu/form-conductor?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/NaingAungLuu/form-conductor?style=for-the-badge)
 
-<!-- ## Table of contents
 
-- [📜 Form Conductor](#-form-conductor)
-  - [Table of contents](#table-of-contents)
-  - [🔨 Form construction using built-in annotations](#-form-construction-using-built-in-annotations)
-  - [Using Jetpack Compose](#using-jetpack-compose)
-      - [Full Example](#full-example)
-  - [Using Traditional Form Building (Android and JVM apps)](#using-traditional-form-building-android-and-jvm-apps)
-    - [Declarative approach](#declarative-approach)
-    - [Imperative Approach](#imperative-approach)
-  - [Validation](#validation)
-  - [Custom Validations](#custom-validations)
-  - [Installation](#installation)
-      - [Single dependency (imports all the modules as a single dependency)](#single-dependency-imports-all-the-modules-as-a-single-dependency)
-      - [Modular dependency](#modular-dependency)
-      - [Available Modules](#available-modules)
+<Admonition type="tip" icon="🎉" title="Announcement">
 
-<br/> -->
+Form conductor is now published on ` Maven Central ` as ` me.naingaungluu.formconductor ` .
+Check [Installation Docs](installation.md) for details
+
+</Admonition>
 
 ## 🔨 Form construction using built-in annotations
 
-FormData.kt
-```kotlin
+```kotlin title="FormData.kt"
+@Form
 data class SignUpForm(
     @MinLength(2)
     val name: String = "",
@@ -77,16 +66,16 @@ data class SignUpForm(
     val bio: String = ""
 )
 ```
-<br><br>
+
 
 ## Using Jetpack Compose
 
-`form` composable
 
-```kotlin
+```kotlin title="Form Composable"
 @Composable
 fun FormScreen() {
     Column {
+        // highlight-start
         form(SignUpForm::class) {
            /**
             * Following properties are available
@@ -98,13 +87,13 @@ fun FormScreen() {
                 enabled = this.formState.value is FormResult.Success
             )
         }
+        // highlight-end
     }
 }
 ```
 
-`field` composable
 
-```kotlin
+```kotlin title="Field Composable"
 form(SignUpForm::class) {
     field(SignUpForm::name) {
        /**
@@ -122,7 +111,8 @@ form(SignUpForm::class) {
 }
 ```
 
-#### Full Example
+### Full Example
+
 ```kotlin
 @Composable
 fun FormScreen() {
@@ -159,16 +149,14 @@ fun FormScreen() {
     }
 }
 ```
-<br>
-<br>
+
 
 ## Using Traditional Form Building (Android and JVM apps)
 
-<br>
 
-`LoginForm.kt`
 
-```kotlin
+```kotlin title="LoginForm.kt"
+@Form
 data class LoginForm(
 
     @EmailAddress
@@ -180,13 +168,11 @@ data class LoginForm(
 )
 ```
 
-<br/>
 
 ### Declarative approach 
 
-`MainActivity.kt`
 
-```kotlin
+```kotlin title="MainActivity.kt"
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
@@ -218,13 +204,12 @@ override fun onCreate(savedInstanceState: Bundle?) {
 }
 ```
 
-<br/>
 
 ### Imperative Approach
 
-`MainActivity.kt`
 
-```kotlin
+
+```kotlin title="MainActivity.kt"
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -285,11 +270,11 @@ Available Validation Annotations
 // More validations in development
 ```
 
-<br/>
 
 The great thing about `form-conductor` is it's very flexible. Each Validation annotation is decoupled from Validation rules.
 
 If you don't like to use annotations, you can use from a list of built-in `ValidationRule` instead
+
 
 ```kotlin
 // Each rule is associated to respective annotations
@@ -301,7 +286,7 @@ FloatRangeRule.validate(value, FloatRange(min,max))
 WebUrlRule.validate(value, WebUrl(httpRequired = true))
 ```
 
-<br/><br/>
+
 
 ## Custom Validations
 
@@ -309,12 +294,14 @@ Feeling adventurous or feel like built-in validation rules aren't enough for you
 
 You can create your own validations rules and annotations to work with `form-conductor` instead. You can take advantage of `FieldValidation` annotation class and creat your custom annotations and validations.
 
+Please check [Custom Validation Guide](./Validation/customValidation) for full comprehensive guide on custom validations.
+
 ```kotlin
 // Custom Annotation
 
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
-@FieldValidation<LocalDate>(
+@FieldValidation(
     fieldType = LocalDate::class,
     validator = FutureDateRule::class
 )
@@ -323,7 +310,7 @@ annotation class FutureDate
 
 // Custom validation rule
 
-object FutureDateRule : ValdiationRule<LocalDate, FutureDate> {
+object FutureDateRule : StatelessValdiationRule<LocalDate, FutureDate> {
     override fun validate(value: LocalDate, options: FutureDate): FieldResult {
         // Your custom validation logic here
     }

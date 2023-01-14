@@ -3,6 +3,7 @@ title: Home
 description: A declarative form validation library for Kotlin.
 icon: material/newspaper
 sidebar_position: 1
+slug: /
 ---
 import Admonition from '@theme/Admonition';
 import logoTransparentUrl from './../assets/logo_transparent.png';
@@ -288,7 +289,7 @@ Feeling adventurous or feel like built-in validation rules aren't enough for you
 
 You can create your own validations rules and annotations to work with `form-conductor` instead. You can take advantage of `FieldValidation` annotation class and creat your custom annotations and validations.
 
-Please check [Custom Validation Guide](./Guide/customValidation) for full comprehensive guide on custom validations.
+Please check [Custom Validation Guide](./Guide/customValidation.md) for full comprehensive guide on custom validations.
 
 ```kotlin
 // Custom Annotation

@@ -344,6 +344,40 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#two-types-of-validation-rules" class="md-nav__link">
+    Two types of validation rules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+    <nav class="md-nav" aria-label="Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stateless-validation-rule" class="md-nav__link">
+    Stateless validation rule
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-based-validation-rule" class="md-nav__link">
+    State-based validation rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -366,6 +400,133 @@
   <h1>Custom Validations</h1>
 
 <h3 id="implementing-custom-validation-rules">Implementing Custom Validation Rules</h3>
+<p>If you're feeling adventuruous or need to create your own validation rule to be used with the library, you can always create one. You can use the <code>@FieldValiation</code> annotation to create custom annotations.</p>
+<p>:::caution
+You must implement the validation rules as a kotlin <code>object</code>.
+:::</p>
+<h3 id="two-types-of-validation-rules">Two types of validation rules</h3>
+<p>Based on your field's nature, you can implement two of the available rules 
+1. <code>StatelessValidationRule</code> - used for the fields that are independently validated without referencing other fields.
+2. <code>StateBasedVaildationRule</code> - used for the fields that depend on other fields for validation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>classDiagram    
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    class ValidationRule { &lt;&lt;interface&gt;&gt; }
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    class StatelessValidationRule~FieldType,Annotation~ {
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        +validate(value, options)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    }
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    class StateBasedValidationRule~FieldType,Annotation,FormType~ {
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        +validate(value, options, formState)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    }
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    ValidationRule &lt;|-- StatelessValidationRule
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    ValidationRule &lt;|-- StateBasedValidationRule
+</code></pre></div>
+<h2 id="example">Example</h2>
+<h3 id="stateless-validation-rule">Stateless validation rule</h3>
+<p>Let's say we're creating a custom validaton rule for Burmese Mobile numbers. We could implement our own validation logic as follows</p>
+<div class="highlight"><span class="filename">MobileNumber.kt</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@Target</span><span class="p">(</span><span class="n">AnnotationTarget</span><span class="p">.</span><span class="na">PROPERTY</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nd">@Retention</span><span class="p">(</span><span class="n">AnnotationRetention</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nd">@MustBeDocumented</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nd">@FieldValidation</span><span class="p">(</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="n">fieldType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">String</span><span class="o">::</span><span class="n">class</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="n">validator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MobileNumberRule</span><span class="o">::</span><span class="kd">class</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="err">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="kd">annotation</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">MobileNumber</span><span class="p">(</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">country</span><span class="p">:</span><span class="w"> </span><span class="n">Country</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">enum</span><span class="w"> </span><span class="n">Country</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="n">Myanmar</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="n">Other</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">MobileNumberRule.kt</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">object</span><span class="w"> </span><span class="nc">MobileNumberRule</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">StatelessValidationRule</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">MobileNumber</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">:</span><span class="w"> </span><span class="n">MobileNumber</span><span class="p">):</span><span class="w"> </span><span class="n">FieldResult</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="p">(</span><span class="n">options</span><span class="p">.</span><span class="na">country</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">            </span><span class="n">Country</span><span class="p">.</span><span class="na">Myanmar</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="na">startsWith</span><span class="p">(</span><span class="s">&quot;+95&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">                    </span><span class="n">FieldResult</span><span class="p">.</span><span class="na">Success</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">                    </span><span class="n">FieldResult</span><span class="p">.</span><span class="na">Error</span><span class="p">(</span><span class="s">&quot;Burmese mobile number must start with +95&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">FieldResult</span><span class="p">.</span><span class="na">Success</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">SignUpFormData.kt</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@Form</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">SignUpFormData</span><span class="p">(</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="p">...</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nd">@MobileNumber</span><span class="p">(</span><span class="n">Country</span><span class="p">.</span><span class="na">Myanmar</span><span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">mobilelNo</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">)</span>
+</code></pre></div>
+<h3 id="state-based-validation-rule">State-based validation rule</h3>
+<p>Let's say we'd like to create a validator for date of birth which depends on the type of user select in another field named <code>userType</code>. Validation logic is like if <code>userType</code> is <code>Adult</code>, date of birth must be at least 13 years and above.</p>
+<div class="highlight"><span class="filename">UserType.kt</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">enum</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">UserType</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">Adult</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">Child</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">CustomDateOfBirth.kt</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nd">@Target</span><span class="p">(</span><span class="n">AnnotationTarget</span><span class="p">.</span><span class="na">PROPERTY</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nd">@Retention</span><span class="p">(</span><span class="n">AnnotationRetention</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nd">@MustBeDocumented</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nd">@FieldValidation</span><span class="p">(</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="n">fieldType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDate</span><span class="o">::</span><span class="n">class</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="n">validator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CustomDateOfBirthRule</span><span class="o">::</span><span class="kd">class</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="err">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="kd">annotation</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">CustomDateOfBirth</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">CustomDateOfBirthRule.kt</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">object</span><span class="w"> </span><span class="nc">CustomDateOfBirthRule</span><span class="p">:</span><span class="w"> </span><span class="n">StateBasedValidationRule</span><span class="o">&lt;</span><span class="n">LocalDate</span><span class="p">,</span><span class="w"> </span><span class="n">CustomDateOfBirth</span><span class="p">,</span><span class="w"> </span><span class="n">SignUpFormData</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="n">LocalDate</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">:</span><span class="w"> </span><span class="n">CustomDateOfBirth</span><span class="p">,</span><span class="w"> </span><span class="n">formState</span><span class="p">:</span><span class="w"> </span><span class="n">SignUpFormData</span><span class="p">):</span><span class="w"> </span><span class="n">FieldResult</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span><span class="c1">// Note: We&#39;re referencing the current value of `formState.userType` for validation</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="p">(</span><span class="n">formState</span><span class="p">.</span><span class="na">userType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">            </span><span class="n">UserType</span><span class="p">.</span><span class="na">Adult</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">validateAdult</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">            </span><span class="n">UserType</span><span class="p">.</span><span class="na">Child</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">validateChild</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">validateAdult</span><span class="p">(</span><span class="n">date</span><span class="p">:</span><span class="w"> </span><span class="n">LocalDate</span><span class="p">):</span><span class="w"> </span><span class="n">FieldResult</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">minDate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDate</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">minusYears</span><span class="p">(</span><span class="m">13</span><span class="p">)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">date</span><span class="p">.</span><span class="na">isBefore</span><span class="p">(</span><span class="n">minDate</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">            </span><span class="n">FieldResult</span><span class="p">.</span><span class="na">Success</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">            </span><span class="n">FieldResult</span><span class="p">.</span><span class="na">Error</span><span class="p">(</span><span class="s">&quot;Adult must be older than 13.&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">)</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">valildateChild</span><span class="p">(</span><span class="n">date</span><span class="p">:</span><span class="w"> </span><span class="n">LocalDate</span><span class="p">):</span><span class="w"> </span><span class="n">FieldResult</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">maxDate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocalDate</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">minusYears</span><span class="p">(</span><span class="m">13</span><span class="p">)</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">date</span><span class="p">.</span><span class="na">isAfter</span><span class="p">(</span><span class="n">maxDate</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">            </span><span class="n">FieldResult</span><span class="p">.</span><span class="na">Success</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">            </span><span class="n">FieldResult</span><span class="p">.</span><span class="na">Error</span><span class="p">(</span><span class="s">&quot;Child must be youngr than 13.&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">)</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">SignUpFormData.kt</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@Form</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">SignUpFormData</span><span class="p">(</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="p">...</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">userType</span><span class="p">:</span><span class="w"> </span><span class="n">UserType</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nd">@CustomDateOfBirth</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">dateOfBirth</span><span class="p">:</span><span class="w"> </span><span class="n">LocalDate</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="p">...</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">)</span>
+</code></pre></div>
 
 
 

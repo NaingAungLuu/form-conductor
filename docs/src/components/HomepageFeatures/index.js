@@ -5,31 +5,30 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('@site/static/img/setup.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Form conductor library makes form validations easier by using annotations.
+        You can create a form instance in a few minutes without worrying about state handling.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'JVM based',
+    Svg: require('@site/static/img/multiplatform.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Even if you're not using Jetpack Compose or not working on android, you can still use the library for form validations in Kotlin Apps.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Powered by Kotlin Reflection',
+    Svg: require('@site/static/img/framework.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        The library is powered by Kotlin Reflection to process form's metadata under the hood.
+        Works flawlessly with obfuscated/minified code in release builds.
       </>
     ),
   },

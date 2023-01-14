@@ -343,12 +343,12 @@ data class FormData(
 ```groovy
 // Groovy
 dependencies {
-    implementation "com.github.NaingAungLuu:form-conductor:0.2.3"
+    implementation "me.naingaungluu.formconductor:core:0.4.0"
 }
 
 // Kts
 dependencies {
-    implementation("com.github.NaingAungLuu:form-conductor:0.2.3")
+    implementation("me.naingaungluu.formconductor:core:0.4.0")
 }
 ```
 
@@ -357,16 +357,16 @@ dependencies {
 ```groovy
 // Groovy
 dependencies {
-    def form_conductor_version = '0.2.3'
-    implementation "com.github.NaingAungLuu.form-conductor:core:$form_conductor_version"
-    implementation "com.github.NaingAungLuu.form-conductor:compose-ui:$form_conductor_version"
+    def form_conductor_version = '0.4.0'
+    implementation "me.naingaungluu.formconductor:core:$form_conductor_version"
+    implementation "me.naingaungluu.formconductor:compose-ui:$form_conductor_version"
 }
 
 // Kts
 dependencies {
-    val formConductorVersion = "0.2.3"
-    implementation("com.github.NaingAungLuu.form-conductor:core:$formConductorVersion")
-    implementation("com.github.NaingAungLuu.form-conductor:compose-ui:$formConductorVersion")
+    val formConductorVersion = "0.4.0"
+    implementation("me.naingaungluu.formconductor:core:$formConductorVersion")
+    implementation("me.naingaungluu.formconductor:compose-ui:$formConductorVersion")
 }
 ```
 

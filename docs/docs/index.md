@@ -7,13 +7,7 @@ sidebar_position: 1
 import Admonition from '@theme/Admonition';
 import logoTransparentUrl from './../assets/logo_transparent.png';
 
-<img
-  src={require('./../assets/logo_transparent.png').default}
-  alt="Example banner"
-  width="150"
-/>
-
-<br/><br/>
+<br/>
 
 # Form Conductor
 A declarative form validation library for Kotlin.
@@ -294,7 +288,7 @@ Feeling adventurous or feel like built-in validation rules aren't enough for you
 
 You can create your own validations rules and annotations to work with `form-conductor` instead. You can take advantage of `FieldValidation` annotation class and creat your custom annotations and validations.
 
-Please check [Custom Validation Guide](./Validation/customValidation) for full comprehensive guide on custom validations.
+Please check [Custom Validation Guide](./Guide/customValidation) for full comprehensive guide on custom validations.
 
 ```kotlin
 // Custom Annotation

@@ -36,12 +36,12 @@ object WebUrlRule : StatelessValidationRule<String, WebUrl> {
      * @return [FieldResult]
      */
     override fun validate(value: String, options: WebUrl): FieldResult {
-        val pattern = if (options.httpRequired) {
-            HTTP_URL_PATTERN.toRegex()
+        val patternMatches = if (options.httpRequired) {
+            value.matches(HTTP_URL_PATTERN.toRegex())
         } else {
-            DOMAIN_URL_PATTERN.toRegex()
+            value.matches(HTTP_URL_PATTERN.toRegex()) || value.matches(DOMAIN_URL_PATTERN.toRegex())
         }
-        return if (value.matches(pattern)) {
+        return if (patternMatches) {
             FieldResult.Success
         } else {
             FieldResult.Error("Invalid URL", this)

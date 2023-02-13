@@ -15,7 +15,7 @@ The library is under active development and APIs are prone to change during the 
 
 <br/>
 
-![JitPack](https://img.shields.io/jitpack/version/com.github.NaingAungLuu/form-conductor?style=for-the-badge)
+![Maven Central](https://img.shields.io/maven-central/v/me.naingaungluu.formconductor/core?color=green&style=for-the-badge)
 ![Codecov](https://img.shields.io/codecov/c/github/NaingAungLuu/form-conductor?style=for-the-badge&token=KC7CK5DOZZ)
 ![GitHub issues](https://img.shields.io/github/issues/NaingAungLuu/form-conductor?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/NaingAungLuu/form-conductor?style=for-the-badge)
@@ -339,34 +339,19 @@ data class FormData(
 
 ## Installation
 
-#### Single dependency (imports all the modules as a single dependency)
 ```groovy
 // Groovy
 dependencies {
-    implementation "com.github.NaingAungLuu:form-conductor:0.2.3"
+    def formconductor_version = "0.4.0"
+    implementation "me.naingaungluu.formconductor:core:$formconductor_version"
+    implementation "me.naingaungluu.formconductor:compose-ui:$formconductor_version"
 }
 
 // Kts
 dependencies {
-    implementation("com.github.NaingAungLuu:form-conductor:0.2.3")
-}
-```
-
-
-#### Modular dependency
-```groovy
-// Groovy
-dependencies {
-    def form_conductor_version = '0.2.3'
-    implementation "com.github.NaingAungLuu.form-conductor:core:$form_conductor_version"
-    implementation "com.github.NaingAungLuu.form-conductor:compose-ui:$form_conductor_version"
-}
-
-// Kts
-dependencies {
-    val formConductorVersion = "0.2.3"
-    implementation("com.github.NaingAungLuu.form-conductor:core:$formConductorVersion")
-    implementation("com.github.NaingAungLuu.form-conductor:compose-ui:$formConductorVersion")
+    val formConductorVersion = "0.4.0"
+    implementation("me.naingaungluu.formconductor:core:$formconductor_version")
+    implementation("me.naingaungluu.formconductor:compose-ui:$formconductor_version")
 }
 ```
 

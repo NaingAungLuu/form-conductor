@@ -19,5 +19,3 @@ local.properties
 core/bin/
 
 .cache/
-
-keystore/release.keystore

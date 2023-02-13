@@ -15,7 +15,6 @@ object MockedForms {
     )
     data class SingleMutableProperty(
         var arg1: String = "",
-        var arg2: String = ""
     )
     data class MultipleMutableProperty(
         var arg1: String = "",

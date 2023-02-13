@@ -1,8 +1,11 @@
 package me.naingaungluu.formconductor
 
 import kotlinx.coroutines.flow.MutableStateFlow
-import me.naingaungluu.formconductor.validation.FieldValidator
+import me.naingaungluu.formconductor.validation.optionalFlags.OptionalFlag
+import me.naingaungluu.formconductor.validation.validators.FieldValidator
+import me.naingaungluu.formconductor.validation.validators.StatelessFieldValidator
 import me.naingaungluu.formconductor.validation.rules.OptionalRule
+import me.naingaungluu.formconductor.validation.optionalFlags.RuleBasedOptionalFlag
 import kotlin.reflect.KProperty1
 
 /**
@@ -11,13 +14,13 @@ import kotlin.reflect.KProperty1
  * @param T Receiver type or the Form Data class.
  * @param V Type of the field
  * @property fieldClass kotlin property reference to the associated property of the field
- * @property validators a set of [FieldValidator] objects associated with the field
- * @property isOptional flags the field as optional
+ * @property validators a set of [StatelessFieldValidator] objects associated with the field
+ * @property optionalStateEvaluators a set of [OptionalFlag] instances to evaluate if the field's optional
  */
 internal class FormFieldImpl<T : Any, V : Any>(
     private val fieldClass: KProperty1<T, V>,
-    private val validators: Set<FieldValidator<V, *>> = emptySet(),
-    override val isOptional: Boolean = false
+    private val validators: Set<FieldValidator<V>> = emptySet(),
+    private val optionalStateEvaluators: Set<OptionalFlag> = emptySet()
 ) : FormField<V> {
 
     override val fieldName: String = fieldClass.name
@@ -45,7 +48,7 @@ internal class FormFieldImpl<T : Any, V : Any>(
         if (input != null && input != "") {
             resultStream.value = validate(input)
         } else {
-            resultStream.value = if (isOptional) {
+            resultStream.value = if (isFieldOptional()) {
                 FieldResult.Success
             } else {
                 FieldResult.Error("This field is required", OptionalRule)
@@ -74,6 +77,15 @@ internal class FormFieldImpl<T : Any, V : Any>(
         } else {
             // returns No Input when there's no error and validation fails
             error ?: FieldResult.NoInput
+        }
+    }
+
+    override fun isFieldOptional(): Boolean {
+        return if (optionalStateEvaluators.isEmpty()) {
+            // This means there's no optional flags applied
+            false
+        } else {
+            optionalStateEvaluators.all(OptionalFlag::evaluate)
         }
     }
 }

@@ -1,6 +1,6 @@
 package me.naingaungluu.formconductor.annotations
 
-import me.naingaungluu.formconductor.validation.ValidationRule
+import me.naingaungluu.formconductor.validation.rules.ValidationRule
 import kotlin.reflect.KClass
 
 /**
@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.ANNOTATION_CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-annotation class FieldValidation<T : Any>(
-    val fieldType: KClass<T>,
-    val validator: KClass<out ValidationRule<T, *>>
+annotation class FieldValidation(
+    val fieldType: KClass<out Any>,
+    val validator: KClass<out ValidationRule>
 )

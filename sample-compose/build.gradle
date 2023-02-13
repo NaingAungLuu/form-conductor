@@ -34,7 +34,7 @@ android {
             minifyEnabled = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //            Uncomment following line to use release signing config
-//            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -74,5 +74,5 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10"
 }

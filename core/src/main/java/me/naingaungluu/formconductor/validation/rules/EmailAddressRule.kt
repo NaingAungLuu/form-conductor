@@ -2,7 +2,6 @@ package me.naingaungluu.formconductor.validation.rules
 
 import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.EmailAddress
-import me.naingaungluu.formconductor.validation.ValidationRule
 
 /**
  * Validation Rule for Email Addresses
@@ -13,7 +12,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * @author Naing Aung Luu
  * @since 0.0.1
  */
-object EmailAddressRule : ValidationRule<String, EmailAddress> {
+object EmailAddressRule : StatelessValidationRule<String, EmailAddress> {
 
     /**
      * Custom baked email pattern that allows name@domain.postfix

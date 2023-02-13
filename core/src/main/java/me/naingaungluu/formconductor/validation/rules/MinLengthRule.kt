@@ -3,7 +3,6 @@ package me.naingaungluu.formconductor.validation.rules
 import me.naingaungluu.formconductor.FieldResult
 import me.naingaungluu.formconductor.annotations.MaxLength
 import me.naingaungluu.formconductor.annotations.MinLength
-import me.naingaungluu.formconductor.validation.ValidationRule
 
 /**
  * Validation Rule for String Lengths
@@ -17,7 +16,7 @@ import me.naingaungluu.formconductor.validation.ValidationRule
  * @author Naing Aung Luu
  * @since 0.0.1
  */
-object MinLengthRule : ValidationRule<String, MinLength> {
+object MinLengthRule : StatelessValidationRule<String, MinLength> {
 
     /**
      * Validates the field using the options passed to [MaxLength] annotation

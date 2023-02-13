@@ -31,7 +31,9 @@ interface FormField<V : Any> {
     /**
      * Optional Flag
      */
-    val isOptional: Boolean
+//    val isOptional: Boolean
+
+    fun isFieldOptional(): Boolean
 
     /**
      * Sets the value of the field

@@ -1,32 +1,26 @@
--keep class me.naingaungluu.formconductor.composeui.* { *; }
--keep class me.naingaungluu.formconductor.validation.* { *; }
 -keepclassmembers class * extends me.naingaungluu.formconductor.validation.ValidationRule {
+    <methods>;
     public static <fields>;
  }
--keep class me.naingaungluu.formconductor.annotations.* { *; }
-
--keepattributes *Annotation*,Signature,InnerClasses
 
 # Keep classes and properties annotated with @Form
 -if @me.naingaungluu.formconductor.annotations.Form class **
--keepclassmembers,allowobfuscation class <1> {
+-keepclassmembers,allowobfuscation,allowoptimization class <1> {
     <init>(...);
     <fields>;
 }
 
-# keep all classes annotated with @Form all the classes referenced in that @Form class
+# keep all the classes referenced in the @Form class
 -if @me.naingaungluu.formconductor.annotations.Form class ** {
     ** *;
 }
--keep class <1> {
+-keep,allowoptimization,allowshrinking class <1> {
     <init>(...);
     <fields>;
 }
--keep @me.naingaungluu.formconductor.annotations.** class * { *; }
--keep @me.naingaungluu.formconductor.annotations.Form class * {
-   *;
- }
- -keep,allowobfuscation @me.naingaungluu.formconductor.annotations.Form class * {
-    *;
-  }
+-keep @me.naingaungluu.formconductor.annotations.Form class * { *; }
 -keep class me.naingaungluu.formconductor.** { *; }
+
+# Keep kotlin.Metadata annotations to maintain metadata on kept items
+-keepattributes *Annotation*,Signature,InnerClasses
+-keep class kotlin.Metadata { *; }

@@ -2,16 +2,23 @@
 A declarative form validation library for Kotlin.
 
 Form conductor is more than form validation. It provides a handful of reusable API to construct a form in simple easy steps.
-Form conductor tries to tackle three aspects of forms: 
+Form conductor tries to tackle three aspects of forms:
 - `Form Data Handling`
-- `Form State Management` 
+- `Form State Management`
 - `Form Validation`
 
 <br/>
 
-![JitPack](https://img.shields.io/jitpack/version/com.github.NaingAungLuu/form-conductor?style=for-the-badge)
-![GitHub](https://img.shields.io/github/license/NaingAungLuu/form-conductor?style=for-the-badge)
+## Under active development 🏗️
+
+The library is under active development and APIs are prone to change during the phase. Updates are going to be prompted in the release notes!
+
+<br/>
+
+![Maven Central](https://img.shields.io/maven-central/v/me.naingaungluu.formconductor/core?color=green&style=for-the-badge)
+![Codecov](https://img.shields.io/codecov/c/github/NaingAungLuu/form-conductor?style=for-the-badge&token=KC7CK5DOZZ)
 ![GitHub issues](https://img.shields.io/github/issues/NaingAungLuu/form-conductor?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/NaingAungLuu/form-conductor?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/NaingAungLuu/form-conductor?style=for-the-badge)
 
 ## Table of contents
@@ -21,16 +28,16 @@ Form conductor tries to tackle three aspects of forms:
   - [Documentation](#documentation)
   - [🔨 Form construction using built-in annotations](#-form-construction-using-built-in-annotations)
   - [Using Jetpack Compose](#using-jetpack-compose)
-      - [Full Example](#full-example)
+    - [Full Example](#full-example)
   - [Using Traditional Form Building (Android and JVM apps)](#using-traditional-form-building-android-and-jvm-apps)
     - [Declarative approach](#declarative-approach)
     - [Imperative Approach](#imperative-approach)
   - [Validation](#validation)
   - [Custom Validations](#custom-validations)
   - [Installation](#installation)
-      - [Single dependency (imports all the modules as a single dependency)](#single-dependency-imports-all-the-modules-as-a-single-dependency)
-      - [Modular dependency](#modular-dependency)
-      - [Available Modules](#available-modules)
+    - [Single dependency (imports all the modules as a single dependency)](#single-dependency-imports-all-the-modules-as-a-single-dependency)
+    - [Modular dependency](#modular-dependency)
+    - [Available Modules](#available-modules)
 
 <br/>
 
@@ -173,7 +180,7 @@ data class LoginForm(
 
 <br/>
 
-### Declarative approach 
+### Declarative approach
 
 `MainActivity.kt`
 
@@ -332,34 +339,19 @@ data class FormData(
 
 ## Installation
 
-#### Single dependency (imports all the modules as a single dependency)
 ```groovy
 // Groovy
 dependencies {
-    implementation "com.github.NaingAungLuu:form-conductor:0.2.3"
+    def formconductor_version = "0.4.0"
+    implementation "me.naingaungluu.formconductor:core:$formconductor_version"
+    implementation "me.naingaungluu.formconductor:compose-ui:$formconductor_version"
 }
 
 // Kts
 dependencies {
-    implementation("com.github.NaingAungLuu:form-conductor:0.2.3")
-}
-```
-
-
-#### Modular dependency
-```groovy
-// Groovy
-dependencies {
-    def form_conductor_version = '0.2.3'
-    implementation "com.github.NaingAungLuu.form-conductor:core:$form_conductor_version"
-    implementation "com.github.NaingAungLuu.form-conductor:compose-ui:$form_conductor_version"
-}
-
-// Kts
-dependencies {
-    val formConductorVersion = "0.2.3"
-    implementation("com.github.NaingAungLuu.form-conductor:core:$formConductorVersion")
-    implementation("com.github.NaingAungLuu.form-conductor:compose-ui:$formConductorVersion")
+    val formConductorVersion = "0.4.0"
+    implementation("me.naingaungluu.formconductor:core:$formconductor_version")
+    implementation("me.naingaungluu.formconductor:compose-ui:$formconductor_version")
 }
 ```
 

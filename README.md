@@ -9,12 +9,6 @@ Form conductor tries to tackle three aspects of forms:
 
 <br/>
 
-## Under active development 🏗️
-
-The library is under active development and APIs are prone to change during the phase. Updates are going to be prompted in the release notes!
-
-<br/>
-
 ![Maven Central](https://img.shields.io/maven-central/v/me.naingaungluu.formconductor/core?color=green&style=for-the-badge)
 ![Codecov](https://img.shields.io/codecov/c/github/NaingAungLuu/form-conductor?style=for-the-badge&token=KC7CK5DOZZ)
 ![GitHub issues](https://img.shields.io/github/issues/NaingAungLuu/form-conductor?style=for-the-badge)

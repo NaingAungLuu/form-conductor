@@ -7,6 +7,7 @@ Form conductor tries to tackle three aspects of forms:
 - `Form State Management`
 - `Form Validation`
 
+
 <br/>
 
 ![Maven Central](https://img.shields.io/maven-central/v/me.naingaungluu.formconductor/core?color=green&style=for-the-badge)
@@ -18,7 +19,7 @@ Form conductor tries to tackle three aspects of forms:
 ## Table of contents
 
 - [📜 Form Conductor](#-form-conductor)
-  - [Table of contents](#table-of-contents)
+  - [Features](#features)
   - [Documentation](#documentation)
   - [🔨 Form construction using built-in annotations](#-form-construction-using-built-in-annotations)
   - [Using Jetpack Compose](#using-jetpack-compose)
@@ -32,6 +33,21 @@ Form conductor tries to tackle three aspects of forms:
     - [Single dependency (imports all the modules as a single dependency)](#single-dependency-imports-all-the-modules-as-a-single-dependency)
     - [Modular dependency](#modular-dependency)
     - [Available Modules](#available-modules)
+
+<br/>
+
+## Features
+
+It supports the following features:
+
+1. Easier form state management with composable scopes
+2. Real-time validation
+3. Built-in validation annotations
+4. Custom validation annotations with support for both `Stateless` and `StateBased` validations (i.e you can validate the form fields based on current state of the form)
+5. Dynamic evaluation of `Optional/Required` flags
+6. Supports imperative style form builder for Traditional Android UI
+
+Since the `core`  features are written in pure kotlin - using kotlin reflection and `Flow` under the hood, any jvm app will be able to take advantage of the library.
 
 <br/>
 

@@ -1,4 +1,7 @@
 # 📜 Form Conductor
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6c7abcb099f24f5b9e7c5e0a396b6ee9)](https://app.codacy.com/gh/NaingAungLuu/form-conductor?utm_source=github.com&utm_medium=referral&utm_content=NaingAungLuu/form-conductor&utm_campaign=Badge_Grade_Settings)
+
 A declarative form validation library for Kotlin.
 
 Form conductor is more than form validation. It provides a handful of reusable API to construct a form in simple easy steps.

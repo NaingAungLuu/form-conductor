@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/oceanicNext');
 const config = {
   title: 'Form Conductor',
   tagline: 'A declarative form validation library for Jetpack Compose',
-  url: 'https://formconductor.naingaungluu.me',
+  url: 'https://formconductor.naingaungluu.dev',
   baseUrl: '/',
   trailingSlash: false,
   onBrokenLinks: 'throw',
@@ -120,12 +120,12 @@ const config = {
               },
               {
                 label: 'Medium Blog',
-                href: 'https://blog.naingaungluu.me',
+                href: 'https://blog.naingaungluu.dev',
               }
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} naingaungluu.me. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} naingaungluu.dev. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
